@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './core/_base.scss';
+@import './components/_aside.scss';
+@import './components/_table.scss';
+@import './components/_header.scss';
+@import './components/_title.scss';
+@import './components/_breadcrumb.scss';
+@import './components/_titlePage.scss';
+@import './components/_filterBtns.scss';
+@import './components/_tabs.scss';
+@import './themes/_color.scss';
