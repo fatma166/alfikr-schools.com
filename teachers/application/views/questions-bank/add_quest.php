@@ -66,7 +66,7 @@
 						class="form-select form-control" onchange="change_class('q_free')"
 					>
 
-
+						<option selected disabled>المرحله</option>
 						<?php foreach($course_types as $course_type_arr) {?>
 							<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
 						<?php }?>

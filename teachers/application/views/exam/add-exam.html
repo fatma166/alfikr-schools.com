@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Soumtech" />
+    <meta name="keywords" content="Soumtech" />
+    <meta name="author" content="Soumtech" />
+    <link rel="stylesheet" href="../../assets/sass/main.css" />
+    <link rel="stylesheet" href="../../assets/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="../../assets/css/datatable.css" />
+    <title>EDU TEACHER</title>
+    <link rel="icon" href="../../assets/images/logo.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div
+      class="dashboard__layout d-flex justify-content-start align-items-start flex-row"
+    >
+      <aside class="d-lg-flex d-none">
+        <div
+          class="sidebar_header d-flex justify-content-between flex-row align-items-center"
+        >
+          <div class="menu_">
+            <img
+              src="../../assets/images/menu.svg"
+              alt="menu"
+              height="24"
+              height="24"
+            />
+          </div>
+          <div class="logo_img">
+            <img
+              src="../../assets/images/logo.png"
+              alt="logo"
+              width="80"
+              height="80"
+            />
+          </div>
+        </div>
+        <div class="links__aside">
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#flush-collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="flush-collapseTwo"
+                >
+                  <img
+                    src="../../assets/images/shield.svg"
+                    alt="book"
+                    width="24"
+                    height="24"
+                    loading="lazy"
+                  />
+                  القسم الأداري
+                </button>
+              </h2>
+              <div
+                id="flush-collapseTwo"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#accordionFlushExample"
+              >
+                <div class="accordion-body">
+                  <ul>
+                    <li>
+                      <a href="../profile/profile.html"> الحساب الشخصي </a>
+                    </li>
+                    <li>
+                      <a href="../students/students.html"> الطلاب </a>
+                    </li>
+                    <li>
+                      <a href="../materials/materials.html"> المواد </a>
+                    </li>
+                    <li>
+                      <a href="../table/table.html"> برنامج الدوام </a>
+                    </li>
+                    <li>
+                      <a href="../helpers-files/files.html">
+                        الملفات المساعدة
+                      </a>
+                    </li>
+                    <li>
+                      <a href="../comments/comments.html"> التعليقات </a>
+                    </li>
+                    <li>
+                      <a href="../questions-bank/bank.html"> بنك الأسئلة </a>
+                    </li>
+                    <li>
+                      <a href="../messages/messages.html"> رسائل الطلاب </a>
+                    </li>
+                    <li>
+                      <a href="../exams/exams.html" class="active">
+                        الأختبارات
+                      </a>
+                    </li>
+                    <li>
+                      <a href="../duties/duties.html"> الواجبات </a>
+                    </li>
+                    <li>
+                      <a
+                        href="../excercies/exercise.html"
+                        class=""
+                      >
+                        التمارين
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="logout__">
+          <button>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.2395 22.27H15.1095C10.6695 22.27 8.52953 20.52 8.15953 16.6C8.11953 16.19 8.41953 15.82 8.83953 15.78C9.23953 15.74 9.61953 16.05 9.65953 16.46C9.94953 19.6 11.4295 20.77 15.1195 20.77H15.2495C19.3195 20.77 20.7595 19.33 20.7595 15.26V8.74C20.7595 4.67 19.3195 3.23 15.2495 3.23H15.1195C11.4095 3.23 9.92953 4.42 9.65953 7.62C9.60953 8.03 9.25953 8.34 8.83953 8.3C8.41953 8.27 8.11953 7.9 8.14953 7.49C8.48953 3.51 10.6395 1.73 15.1095 1.73H15.2395C20.1495 1.73 22.2495 3.83 22.2495 8.74V15.26C22.2495 20.17 20.1495 22.27 15.2395 22.27Z"
+                fill="#292D32"
+              />
+              <path
+                d="M15.0001 12.75H3.62012C3.21012 12.75 2.87012 12.41 2.87012 12C2.87012 11.59 3.21012 11.25 3.62012 11.25H15.0001C15.4101 11.25 15.7501 11.59 15.7501 12C15.7501 12.41 15.4101 12.75 15.0001 12.75Z"
+                fill="#292D32"
+              />
+              <path
+                d="M5.85043 16.1C5.66043 16.1 5.47043 16.03 5.32043 15.88L1.97043 12.53C1.68043 12.24 1.68043 11.76 1.97043 11.47L5.32043 8.12C5.61043 7.83 6.09043 7.83 6.38043 8.12C6.67043 8.41 6.67043 8.89 6.38043 9.18L3.56043 12L6.38043 14.82C6.67043 15.11 6.67043 15.59 6.38043 15.88C6.24043 16.03 6.04043 16.1 5.85043 16.1Z"
+                fill="#292D32"
+              />
+            </svg>
+            <span> تسجيل خروج </span>
+          </button>
+        </div>
+      </aside>
+      <div
+        class="wrraper_page d-flex justify-content-start align-items-start flex-column w-100"
+      >
+        <div
+          class="header__dahsboard d-flex justify-content-between flex-row align-items-center w-100 flex-wrap gap-2"
+        >
+          <div
+            class="right__btns d-flex justify-content-start flex-row align-items-center"
+          >
+            <a href="">
+              <img
+                src="../../assets/images/message.svg"
+                alt="chat"
+                width="23"
+                height="23"
+                loading="lazy"
+              />
+            </a>
+            <a href="">
+              <img
+                src="../../assets/images/mail.svg"
+                alt="chat"
+                width="23"
+                height="23"
+                loading="lazy"
+              />
+            </a>
+            <a href="">
+              <img
+                src="../../assets/images/task.svg"
+                alt="chat"
+                width="23"
+                height="23"
+                loading="lazy"
+              />
+            </a>
+          </div>
+          <div
+            class="left__btns d-flex justify-content-start flex-row align-items-center"
+          >
+            <a href="">
+              <img
+                src="../../assets/images/mirroring-screen.svg"
+                alt="chat"
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+            </a>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">
+                <img
+                  src="../../assets/images/search-md.svg"
+                  alt="search"
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                />
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="بحث"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+            <a href="">
+              <img
+                src="../../assets/images/notification.svg"
+                alt="chat"
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+            </a>
+            <a href="">
+              <img
+                src="../../assets/images/profile.svg"
+                alt="chat"
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+            </a>
+            <a href="">
+              <img
+                src="../../assets/images/setting.svg"
+                alt="chat"
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+            </a>
+          </div>
+        </div>
+        <div
+          class="header__page d-flex justify-content-between align-items-start flex-row flex-wrap w-100"
+        >
+          <div class="title_page">
+            <h2>الأختبارات</h2>
+            <nav>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a href=""><i class="mdi mdi-home-outline"></i> الرئيسية </a>
+                </li>
+                <li class="breadcrumb-item" aria-current="page">
+                  القسم الإداري
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  الأختبارات
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        <div class="add_exam_duty">
+          <div class="tab-status">
+            <span
+              class="tab tab_one d-flex justify-content-center align-items-center flex-column active"
+              style="gap: 10px"
+            >
+              <span class="circle">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    opacity="0.4"
+                    d="M7.86866 15.4599L7 21.9999L11.5884 19.2469C11.7381 19.1571 11.8129 19.1122 11.8928 19.0947C11.9634 19.0791 12.0366 19.0791 12.1072 19.0947C12.1871 19.1122 12.2619 19.1571 12.4116 19.2469L17 21.9999L16.1319 15.457"
+                    stroke="black"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M16.4259 4.24888C16.5803 4.6224 16.8768 4.9193 17.25 5.0743L18.5589 5.61648C18.9325 5.77121 19.2292 6.06799 19.384 6.44154C19.5387 6.81509 19.5387 7.23481 19.384 7.60836L18.8422 8.91635C18.6874 9.29007 18.6872 9.71021 18.8427 10.0837L19.3835 11.3913C19.4602 11.5764 19.4997 11.7747 19.4997 11.975C19.4998 12.1752 19.4603 12.3736 19.3837 12.5586C19.3071 12.7436 19.1947 12.9118 19.0531 13.0534C18.9114 13.195 18.7433 13.3073 18.5582 13.3839L17.2503 13.9256C16.8768 14.0801 16.5799 14.3765 16.4249 14.7498L15.8827 16.0588C15.728 16.4323 15.4312 16.7291 15.0577 16.8838C14.6841 17.0386 14.2644 17.0386 13.8909 16.8838L12.583 16.342C12.2094 16.1877 11.7899 16.188 11.4166 16.3429L10.1077 16.8843C9.73434 17.0387 9.31501 17.0386 8.94178 16.884C8.56854 16.7293 8.27194 16.4329 8.11711 16.0598L7.57479 14.7504C7.42035 14.3769 7.12391 14.08 6.75064 13.925L5.44175 13.3828C5.06838 13.2282 4.77169 12.9316 4.61691 12.5582C4.46213 12.1849 4.46192 11.7654 4.61633 11.3919L5.1581 10.0839C5.31244 9.71035 5.31213 9.29079 5.15722 8.91746L4.61623 7.60759C4.53953 7.42257 4.50003 7.22426 4.5 7.02397C4.49997 6.82369 4.5394 6.62536 4.61604 6.44032C4.69268 6.25529 4.80504 6.08716 4.94668 5.94556C5.08832 5.80396 5.25647 5.69166 5.44152 5.61508L6.74947 5.07329C7.12265 4.91898 7.41936 4.6229 7.57448 4.25004L8.11664 2.94111C8.27136 2.56756 8.56813 2.27078 8.94167 2.11605C9.3152 1.96132 9.7349 1.96132 10.1084 2.11605L11.4164 2.65784C11.7899 2.81218 12.2095 2.81187 12.5828 2.65696L13.8922 2.11689C14.2657 1.96224 14.6853 1.96228 15.0588 2.11697C15.4322 2.27167 15.729 2.56837 15.8837 2.94182L16.426 4.25115L16.4259 4.24888Z"
+                    stroke="black"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="title"> تفاصيل الأختبار </span>
+            </span>
+            <span
+              class="tab tab_two d-flex justify-content-center align-items-center flex-column"
+              style="gap: 10px"
+            >
+              <span class="circle">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    opacity="0.4"
+                    d="M4 9.5V16.3066C4 16.6785 4 16.8645 4.05802 17.0273C4.10931 17.1712 4.1929 17.3015 4.30238 17.4081C4.42621 17.5287 4.59527 17.6062 4.93335 17.7611L11.3334 20.6945C11.5786 20.8069 11.7012 20.8631 11.8289 20.8852C11.9421 20.9049 12.0579 20.9049 12.1711 20.8852C12.2988 20.8631 12.4214 20.8069 12.6666 20.6945L19.0666 17.7611C19.4047 17.6062 19.5738 17.5287 19.6976 17.4081C19.8071 17.3015 19.8907 17.1712 19.942 17.0273C20 16.8645 20 16.6785 20 16.3066V9.5"
+                    stroke="black"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17 14.5001V11.4945C17 11.315 17 11.2253 16.9727 11.146C16.9485 11.076 16.9091 11.0122 16.8572 10.9592C16.7986 10.8993 16.7183 10.8592 16.5578 10.779L12 8.50006M2 8.50006L11.6422 3.67895C11.7734 3.61336 11.839 3.58056 11.9078 3.56766C11.9687 3.55622 12.0313 3.55622 12.0922 3.56766C12.161 3.58056 12.2266 3.61336 12.3578 3.67895L22 8.50006L12.3578 13.3212C12.2266 13.3868 12.161 13.4196 12.0922 13.4325C12.0313 13.4439 11.9687 13.4439 11.9078 13.4325C11.839 13.4196 11.7734 13.3868 11.6422 13.3212L2 8.50006Z"
+                    stroke="black"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="title"> اضافة اختبار </span>
+            </span>
+          </div>
+          <div role="tab-list" class="tab-list">
+            <form class="needs-validation">
+              <div role="tabpanel" id="details__tab" class="tabpanel w-100">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> اسم الأختبار </label>
+                      <input
+                        type="password"
+                        class="form-control"
+                        placeholder="اسم الأختبار "
+                        aria-label="password"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for="" class=""> المرحلة </label>
+                      <select
+                        name="gender"
+                        id="gender"
+                        class="form-select form-control"
+                      >
+                        <option selected disabled>المرحلة</option>
+                        <option value="">مرحلة 1</option>
+                        <option value="">مرحلة 2</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for="" class=""> الصف الدراسي </label>
+                      <select
+                        name="gender"
+                        id="gender"
+                        class="form-select form-control"
+                      >
+                        <option selected disabled>الصف الدراسي</option>
+                        <option value="">صف 1</option>
+                        <option value="">صف 2</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for="" class=""> الشعبة </label>
+                      <select
+                        name="gender"
+                        id="gender"
+                        class="form-select form-control"
+                      >
+                        <option selected disabled>الشعبة</option>
+                        <option value="">شعبة 1</option>
+                        <option value="">شعبة 2</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> تاريخ بداية الأختبار </label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        placeholder="كلمة المرور"
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> تاريخ نهاية الأختبار </label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        placeholder="كلمة المرور"
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> مدة الأختبار </label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="مدة الأختبار "
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> الدرجة النهائية </label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder=" الدرجة النهائية "
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> درجة النجاح </label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="درجة النجاح "
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="input_form d-flex justify-content-start align-items-start flex-column gap-2 w-100 mb-4"
+                    >
+                      <label for=""> عدد الأسئلة </label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder=" عدد الأسئلة "
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div
+                      class="add__note__div input_form d-flex justify-content-start align-items-start flex-column gap-2 mb-4 w-100"
+                    >
+                      <label for=""> الملحوظات </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=" الملحوظات "
+                        aria-label="date"
+                      />
+                    </div>
+                  </div>
+                  <button class="add__note">أضافة ملحوظة اخرى</button>
+                </div>
+                <div
+                  class="btn__ d-flex justify-content-center align-items-center flex-row mt-5"
+                >
+                  <button class="continue__btn">التالي</button>
+                </div>
+              </div>
+              <div role="tabpanel" id="exam__tab" class="tabpanel hidden">
+                <ul class="nav nav-tabs mb-5" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link active"
+                      id="bank-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#bank-tab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="bank-tab-pane"
+                      aria-selected="true"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12.37 2.15009L21.37 5.75006C21.72 5.89006 22 6.31006 22 6.68006V10.0001C22 10.5501 21.55 11.0001 21 11.0001H3C2.45 11.0001 2 10.5501 2 10.0001V6.68006C2 6.31006 2.28 5.89006 2.63 5.75006L11.63 2.15009C11.83 2.07009 12.17 2.07009 12.37 2.15009Z"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M22 22H2V19C2 18.45 2.45 18 3 18H21C21.55 18 22 18.45 22 19V22Z"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M4 18V11"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M8 18V11"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12 18V11"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M16 18V11"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M20 18V11"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M1 22H23"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5Z"
+                          stroke="#292D32"
+                          stroke-width="1.5"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      بنك الأسئلة
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="adding-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#adding-tab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="adding-tab-pane"
+                      aria-selected="false"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 5V19M5 12H19"
+                          stroke="black"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      اضافة اسئلة أخرى
+                    </button>
+                  </li>
+                </ul>
+                <div class="tab-content mt-4" id="myTabContent">
+                  <div
+                    class="tab-pane fade show active mt-4"
+                    id="bank-tab-pane"
+                    role="tabpanel"
+                    aria-labelledby="bank-tab"
+                    tabindex="0"
+                  >
+                    <div
+                      class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                    >
+                      <div
+                        class="d-flex justify-content-start align-items-start flex-row gap-0"
+                      >
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="inlineCheckbox1"
+                            value="option1"
+                          />
+                        </div>
+                        <h6>ماهي عاصمة القاهرة ؟</h6>
+                      </div>
+                      <div>
+                        <input
+                          type="number"
+                          class="form-control w-100"
+                          placeholder="ترتيب السؤال"
+                          aria-label="text"
+                          value=""
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                    >
+                      <div
+                        class="d-flex justify-content-start align-items-start flex-row gap-0"
+                      >
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="inlineCheckbox1"
+                            value="option1"
+                          />
+                        </div>
+                        <h6>ماهي عاصمة القاهرة ؟</h6>
+                      </div>
+                      <div>
+                        <input
+                          type="number"
+                          class="form-control w-100"
+                          placeholder="ترتيب السؤال"
+                          aria-label="text"
+                          value=""
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                    >
+                      <div
+                        class="d-flex justify-content-start align-items-start flex-row gap-0"
+                      >
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="inlineCheckbox1"
+                            value="option1"
+                          />
+                        </div>
+                        <h6>هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها. ولذلك يتم استخدام طريقة لوريم إيبسوم لأنها تعطي توزيعاَ طبيعياَ </h6>
+                      </div>
+                      <div>
+                        <input
+                          type="number"
+                          class="form-control w-100"
+                          placeholder="ترتيب السؤال"
+                          aria-label="text"
+                          value=""
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div
+                    class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                  >
+                    <div
+                      class="d-flex justify-content-start align-items-start flex-row gap-0"
+                    >
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                      </div>
+                      <img src="../../assets/images/map.png" alt="image" height="400" width="400">
+                    </div>
+                    <div>
+                      <input
+                        type="number"
+                        class="form-control w-100"
+                        placeholder="ترتيب السؤال"
+                        aria-label="text"
+                        value=""
+                        required
+                      />
+                    </div>
+                    </div>
+                    <div
+                    class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                  >
+                    <div
+                      class="d-flex justify-content-start align-items-start flex-row gap-0"
+                    >
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                      </div>
+                      <h6>ماهي عاصمة القاهرة ؟</h6>
+                    </div>
+                    <div>
+                      <input
+                        type="number"
+                        class="form-control w-100"
+                        placeholder="ترتيب السؤال"
+                        aria-label="text"
+                        value=""
+                        required
+                      />
+                    </div>
+                    </div>
+                    <div
+                        class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                    >
+                        <div
+                        class="d-flex justify-content-start align-items-start flex-row gap-0"
+                        >
+                        <div class="form-check form-check-inline">
+                            <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="inlineCheckbox1"
+                            value="option1"
+                            />
+                        </div>
+                        <h6>ماهي عاصمة القاهرة ؟</h6>
+                        </div>
+                        <div>
+                        <input
+                            type="number"
+                            class="form-control w-100"
+                            placeholder="ترتيب السؤال"
+                            aria-label="text"
+                            value=""
+                            required
+                        />
+                        </div>
+                    </div>
+                    <div
+                  class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                >
+                  <div
+                    class="d-flex justify-content-start align-items-start flex-row gap-0"
+                  >
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="inlineCheckbox1"
+                        value="option1"
+                      />
+                    </div>
+                    <h6>ماهي عاصمة القاهرة ؟</h6>
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      class="form-control w-100"
+                      placeholder="ترتيب السؤال"
+                      aria-label="text"
+                      value=""
+                      required
+                    />
+                  </div>
+                    </div>
+                    <div
+                    class="d-flex justify-content-between flex-row align-items-start flex-wrap mt-4 pb-3 border-bottom border-solid border-fifth-color"
+                    >
+                    <div
+                        class="d-flex justify-content-start align-items-start flex-row gap-0"
+                    >
+                        <div class="form-check form-check-inline">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="inlineCheckbox1"
+                            value="option1"
+                        />
+                        </div>
+                        <h6>ماهي عاصمة القاهرة ؟</h6>
+                    </div>
+                    <div>
+                        <input
+                        type="number"
+                        class="form-control w-100"
+                        placeholder="ترتيب السؤال"
+                        aria-label="text"
+                        value=""
+                        required
+                        />
+                    </div>
+                    </div>
+                  </div>
+                  <div
+                        class="tab-pane fade w-100"
+                        id="adding-tab-pane"
+                        role="tabpanel"
+                        aria-labelledby="adding-tab"
+                        tabindex="0"
+                    >
+                        <div
+                        class="adding__questions d-flex justify-content-start flex-column gap-4 align-items-start w-100"
+                        >
+                            <div
+                                class="d-flex justify-content-start flex-row gap-2 align-items-start w-100"
+                            >
+                                <div>
+                                <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="options-outlined"
+                                    id="free-question"
+                                    autocomplete="off"
+                                    checked
+                                />
+                                <label class="btn btn-outline-success" for="free-question"
+                                    >سؤال حر</label
+                                >
+                                </div>
+                                <div>
+                                <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="options-outlined"
+                                    id="list-questions"
+                                    autocomplete="off"
+                                />
+                                <label class="btn btn-outline-success" for="list-questions"
+                                    >مجموعة أسئلة</label
+                                >
+                                </div>
+                            </div>
+                            <form action="" class="w-100" id="question_exist_free">
+                                <div id="questions_container" class="w-100">
+                                    <div
+                                    class="w-100 border-bottom border-solid border-fifth-color pb-4 free_question_ques mt-4"
+                                    >
+                                    <div
+                                        class="d-flex justify-content-start flex-column align-items-start gap-2 mb-3 w-100"
+                                    >
+                                        <span> السؤال </span>
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="السؤال"
+                                        value=""
+                                        aria-label="text"
+                                        required
+                                        />
+                                    </div>
+                                    <div
+                                        class="d-flex justify-content-start flex-column align-items-start gap-3"
+                                    >
+                                        <span> الأجابات </span>
+                                        <div class="w-100">
+                                        <label
+                                            class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                        >
+                                            <input type="radio" name="correct_answer" value="answer1" />
+                                            <input
+                                            type="text"
+                                            class="form-control w-100"
+                                            placeholder="اجابة 1"
+                                            aria-label="text"
+                                            value=""
+                                            required
+                                            />
+                                            <div class="input-group">
+                                              <input type="file" class="form-control" id="inputGroupFile02">
+                                              <label class="input-group-text" for="inputGroupFile02">او ارفع ميديا كـ اجابة</label>
+                                            </div>
+                                        </label>
+                                        </div>
+                                        <div class="w-100">
+                                        <label
+                                            class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                        >
+                                            <input type="radio" name="correct_answer" value="answer2" />
+                                            <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="اجابة 2"
+                                            aria-label="text"
+                                            value=""
+                                            required
+                                            />
+                                            <div class="input-group">
+                                              <input type="file" class="form-control" id="inputGroupFile02">
+                                              <label class="input-group-text" for="inputGroupFile02">او ارفع ميديا كـ اجابة</label>
+                                            </div>
+                                        </label>
+                                        </div>
+                                        <div class="w-100">
+                                        <label
+                                            class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                        >
+                                            <input type="radio" name="correct_answer" value="answer3" />
+                                            <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="اجابة 3"
+                                            aria-label="text"
+                                            value=""
+                                            required
+                                            />
+                                            <div class="input-group">
+                                              <input type="file" class="form-control" id="inputGroupFile02">
+                                              <label class="input-group-text" for="inputGroupFile02">او ارفع ميديا كـ اجابة</label>
+                                            </div>
+                                        </label>
+                                        </div>
+                                        <div class="w-100">
+                                        <label
+                                            class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                        >
+                                            <input type="radio" name="correct_answer" value="answer4" />
+                                            <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="اجابة 4"
+                                            aria-label="text"
+                                            value=""
+                                            required
+                                            />
+                                            <div class="input-group">
+                                              <input type="file" class="form-control" id="inputGroupFile02">
+                                              <label class="input-group-text" for="inputGroupFile02">او ارفع ميديا كـ اجابة</label>
+                                            </div>
+                                        </label>
+                                        </div>
+                                        <input
+                                            type="nymber"
+                                            class="form-control"
+                                            placeholder="ترتيب السؤال"
+                                            aria-label="text"
+                                            value=""
+                                            required
+                                            />
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center flex-row gap-3 mt-3">
+                                    <div
+                                    class="d-flex justify-content-end align-items-end flex-row gap-2"
+                                >
+                                    <button class="d-flex justify-content-center align-items-center flex-row" id="add_another_question_free">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        color="#000"
+                                        fill="#000"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                        d="M12 5V19M5 12H19"
+                                        color="#000"
+                                        stroke="#000"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                    <span> اضافة سؤال اخر </span>
+                                    </button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                            
+                            <form action="" class="w-100" id="question_exist_list" style="display: none;">
+                                <div id="questions_container" class="w-100">
+                                    <div
+                                    class="w-100 free_question_ques mt-4"
+                                    >
+                                    <div
+                                        class="d-flex justify-content-start flex-column align-items-start gap-2 mb-3 w-100"
+                                    >
+                                        <span> القطعة : </span>
+                                        <textarea name="" id="" cols="30" rows="10" class="form-control" placeholder="اكتب القطعة هنا"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="" class="mb-3"> صورة السؤال </label>
+                                        <div class="file__zone d-flex justify-content-center align-items-center flex-column mb-4"
+                                                style="gap: 8px">
+                                            <input class="form-control" type="file" id="formFile">
+                                            <img src="../../assets/images/down.svg" alt="download" alt="download"
+                                                    loading="lazy" width="40" height="40"/>
+                                            <span> اضغط او قم بالسحب </span>
+                                            <p>png, jpg, jpeg (max. 800x400px)</p>
+                                        </div>
+                                    </div>
+                                    <div id="list_question_repeat_top">
+                                        <div class="list_question_repeat  border-bottom border-solid border-fifth-color pb-4 mt-5">
+                                        <div
+                                        class="d-flex justify-content-start flex-column align-items-start gap-2 mb-3 w-100"
+                                        >
+                                        <span> السؤال </span>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="السؤال"
+                                            value=""
+                                            aria-label="text"
+                                            required
+                                        />
+                                        </div>
+                                        <div
+                                            class="d-flex justify-content-start flex-column align-items-start gap-3"
+                                        >
+                                            <span> الأجابات </span>
+                                            <div class="w-100">
+                                            <label
+                                                class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                            >
+                                                <input type="radio" name="correct_answer" value="answer1" />
+                                                <input
+                                                type="text"
+                                                class="form-control w-100"
+                                                placeholder="اجابة 1"
+                                                aria-label="text"
+                                                value=""
+                                                required
+                                                />
+                                            </label>
+                                            </div>
+                                            <div class="w-100">
+                                            <label
+                                                class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                            >
+                                                <input type="radio" name="correct_answer" value="answer2" />
+                                                <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="اجابة 2"
+                                                aria-label="text"
+                                                value=""
+                                                required
+                                                />
+                                            </label>
+                                            </div>
+                                            <div class="w-100">
+                                            <label
+                                                class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                            >
+                                                <input type="radio" name="correct_answer" value="answer3" />
+                                                <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="اجابة 3"
+                                                aria-label="text"
+                                                value=""
+                                                required
+                                                />
+                                            </label>
+                                            </div>
+                                            <div class="w-100">
+                                            <label
+                                                class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+                                            >
+                                                <input type="radio" name="correct_answer" value="answer4" />
+                                                <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="اجابة 4"
+                                                aria-label="text"
+                                                value=""
+                                                required
+                                                />
+                                            </label>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center flex-row gap-3 mt-3">
+                                    <button class="add_ques">
+                                    <span> حفظ </span>
+                                    </button>
+                                    <div
+                                    class="d-flex justify-content-end align-items-end flex-row gap-2"
+                                >
+                                    <button type="button" class="d-flex justify-content-center align-items-center flex-row" id="add_another_question_list">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        color="#000"
+                                        fill="#000"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                        d="M12 5V19M5 12H19"
+                                        color="#000"
+                                        stroke="#000"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                    <span> اضافة سؤال اخر </span>
+                                    </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-center align-items-center flex-row">
+                    <button class="submit"> تأكيد </button>
+                </div>
+              </div>
+              <div class="form__actions mt-5 d-none">
+                <button id="prev__btn" class="">السابق</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/js/jquery.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/datatable.js"></script>
+
+    <script>
+      const previousButton = document.querySelector("#prev__btn");
+      const tabTargets = document.querySelectorAll(".tab");
+      const tabPanels = document.querySelectorAll(".tabpanel");
+      const isEmpty = (str) => !str.trim().length;
+      let currentStep = 0;
+
+      previousButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        tabPanels[currentStep].classList.add("hidden");
+        //   tabTargets[currentStep].classList.remove('active');
+        tabPanels[currentStep - 1].classList.remove("hidden");
+        //   tabTargets[currentStep - 1].classList.add('active');
+        currentStep -= 1;
+        updateStatusDisplay();
+      });
+
+      function updateStatusDisplay() {
+        if (currentStep === tabTargets.length - 1) {
+          previousButton.classList.add("hidden");
+          document.querySelector(".tab_one").classList.add("active");
+          document.querySelector(".tab_two").classList.add("active");
+          document.querySelector(".tab_three").classList.add("active");
+        } else if (currentStep == 0) {
+          previousButton.classList.add("hidden");
+          document.querySelector(".tab_one").classList.add("active");
+          document.querySelector(".tab_two").classList.remove("active");
+          document.querySelector(".tab_three").classList.remove("active");
+        } else if (currentStep == 1) {
+          previousButton.classList.remove("hidden");
+          document.querySelector(".tab_one").classList.add("active");
+          document.querySelector(".tab_two").classList.add("active");
+          document.querySelector(".tab_three").classList.remove("active");
+        } else {
+          previousButton.classList.add("hidden");
+        }
+      }
+
+      const continueButtons = document.querySelectorAll(".continue__btn");
+      continueButtons.forEach((continueButton) => {
+        continueButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          tabPanels[currentStep].classList.add("hidden");
+          // tabTargets[currentStep].classList.remove('active');
+          tabPanels[currentStep + 1].classList.remove("hidden");
+          // tabTargets[currentStep + 1].classList.add('active');
+          currentStep += 1;
+          updateStatusDisplay();
+        });
+      });
+    </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function toggleForms() {
+      var freeQuestionForm2 = document.getElementById('question_exist_free');
+      var listQuestionForm2 = document.getElementById('question_exist_list');
+      
+      // Get the checked radio button
+      var freeQuestionChecked2 = document.getElementById('free-question').checked;
+      var listQuestionChecked2 = document.getElementById('list-questions').checked;
+      
+      // Show/hide forms based on checked state
+      if (freeQuestionChecked2) {
+        freeQuestionForm2.style.display = 'block';
+        listQuestionForm2.style.display = 'none';
+      } else {
+        freeQuestionForm2.style.display = 'none';
+        listQuestionForm2.style.display = 'block';
+      }
+    }
+    
+    // Listen for changes in the radio buttons' checked state
+    var radioButtons = document.querySelectorAll('.btn-check');
+    radioButtons.forEach(function(button) {
+      button.addEventListener('change', toggleForms);
+    });
+    
+    // Initially call toggleForms to set initial visibility
+    toggleForms();
+});
+
+</script>
+
+<script>
+    document.getElementById('add_another_question_free').addEventListener('click', function() {
+      var container = document.getElementById('questions_container');
+      var newQuestion = document.querySelector('.free_question_ques').cloneNode(true);
+      
+      // Create delete button
+      var deleteButton = document.createElement('button');
+      deleteButton.textContent = 'حذف';
+      deleteButton.className = 'delete_question';
+      deleteButton.addEventListener('click', function() {
+        newQuestion.remove();
+      });
+      
+      // Append delete button to new question
+      newQuestion.appendChild(deleteButton);
+      
+      // Append new question to container
+      container.appendChild(newQuestion);
+    });
+    </script>
+
+
+<script>
+  // Function to add a new note
+  function addNote() {
+    const notesContainer = document.querySelector('.row');
+    
+    // Create new note div
+    const newNoteDiv = document.createElement('div');
+    newNoteDiv.classList.add('col-md-12');
+    newNoteDiv.innerHTML = `
+      <div class="add__note__div input_form d-flex justify-content-start align-items-start flex-column gap-2 mb-3 w-100">
+        <input type="text" class="form-control" placeholder="الملحوظات" aria-label="date">
+        <button class="delete__note" onclick="deleteNote(this)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4" d="M16 6V5.2C16 4.0799 16 3.51984 15.782 3.09202C15.5903 2.71569 15.2843 2.40973 14.908 2.21799C14.4802 2 13.9201 2 12.8 2H11.2C10.0799 2 9.51984 2 9.09202 2.21799C8.71569 2.40973 8.40973 2.71569 8.21799 3.09202C8 3.51984 8 4.0799 8 5.2V6M10 11.5V16.5M14 11.5V16.5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 6H21M19 6V17.2C19 18.8802 19 19.7202 18.673 20.362C18.3854 20.9265 17.9265 21.3854 17.362 21.673C16.7202 22 15.8802 22 14.2 22H9.8C8.11984 22 7.27976 22 6.63803 21.673C6.07354 21.3854 5.6146 20.9265 5.32698 20.362C5 19.7202 5 18.8802 5 17.2V6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    `;
+    
+    // Append new note div to notes container
+    notesContainer.insertBefore(newNoteDiv, document.querySelector('.add__note'));
+  }
+  
+  // Function to delete a note
+  function deleteNote(btn) {
+    btn.parentElement.parentElement.remove(); // Remove the entire parent div
+  }
+  
+  // Event listener for adding a new note
+  document.querySelector('.add__note').addEventListener('click', addNote);
+</script>
+
+
+  </body>
+</html>

@@ -79,6 +79,16 @@ $lang['The file has been successfully uploaded'] = 'تم حفظ الملف بن�
 $lang['uploading the file'] = 'تم رفع الملف';
 $lang['free question saved'] ='حفظ سؤال حر';
 $lang['free questions has been successfully saved'] = 'تم حفظ سؤال حر بنجاح';
+$lang['Please enter an title.']='ادخل اسم الاختبار';
+$lang['Please enter an course_types_stages.']='اختر المرحله';
+$lang['Please enter an course_types_class.']='اختر الصف الدراسي';
+$lang['Please enter group_id.']='اختر المجموعه';
+$lang['Please enter an start_date.']='ادخل تاريخ بدايه الاختبار';
+$lang['Please enter an end_date.']='ادخل تاريخ نهايه الاختبار';
+$lang['Please enter an time.']='ادخل مده الاختبار';
+$lang['Please enter degree.']='ادخل درجه النهائيه للاختبار';
+$lang['Please enter  passdegree.']='ادخل درجه النجاح';
+$lang['Please enter  question_count.']='ادخل عدد الاسئله';
 
 
 
