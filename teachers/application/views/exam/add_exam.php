@@ -476,12 +476,7 @@
                     success: function(data1) {
                          $('#question_div').empty();
                          $('#question_div').append(data1);
-                        Swal.fire({
-                            title: "<?php echo $this->lang->line('free question saved')?>",
-                            text: "<?php echo $this->lang->line('free questions has been successfully saved')?>",
-                            icon: 'success',
-                            confirmButtonText: "<?php echo $this->lang->line('OK')?>"
-                        });
+
 
                     } ,
                     error: function(xhr, status, error) {
@@ -707,6 +702,10 @@
     }
 
     $(document).ready(function() {
+        $('input[type="checkbox"]').on('click', function() {
+            // Update the checked state of the checkbox
+            $(this).prop('checked', !$(this).prop('checked'));
+        });
 
         $("#add_examm").click(function (e) {
             e.preventDefault();
@@ -730,7 +729,25 @@
                     formData.append(name, $this.val());
                 }
             });
-            // console.log(formData);
+            // Get the IDs of the checked checkboxes
+            const checkedCheckboxes = $('#add_examm_form input[type="checkbox"]:checked');
+
+            const checkedIds = checkedCheckboxes.map(function() {
+
+                return $(this).attr('id');
+            }).get();
+            const arrangeValues= checkedCheckboxes.map(function() {
+                return $("input[name='arrange"+$(this).attr('id')+"']").val();
+            }).get();
+
+            checkedCheckboxes.each(function() {
+                $(`input[name="arrange[${$(this).attr('id')}]"]`).prop('required', true);
+            });
+
+// Add the checked IDs and their order to the FormData
+            formData.append('checkedIds', JSON.stringify(checkedIds));
+            formData.append('arrangeValues', JSON.stringify(arrangeValues));
+             console.log(formData);
             $.ajax({
                 type:"post",
                 url: "<?Php echo base_url(); ?>exam/save",
@@ -739,7 +756,7 @@
                 contentType: false,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function(data1) {
-                     alert("suceess");
+                    // alert("suceess");
                     Swal.fire({
                         title: "<?php echo $this->lang->line('exam saved')?>",
                         text: "<?php echo $this->lang->line('exam has been successfully saved')?>",
@@ -756,7 +773,7 @@
                     //  console.log('Error occurred while fetching options');
                     Swal.fire({
                         title: "<?php echo $this->lang->line('Error')?>",
-                        text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
+                        text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('saved') ?>",
                         icon: 'error',
                         confirmButtonText: "<?php echo $this->lang->line('OK')?>"
                     });
@@ -766,4 +783,18 @@
             });
         });
     });
+    function showErrors(errors) {
+        // Clear any previous errors
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+
+        // Loop through the errors and display them
+        $.each(errors, function(field, message) {
+            alert(field);
+            var input = $('[name="' + field + '"]');
+            alert(input);
+            input.addClass('is-invalid');
+            input.parent().append('<div class="invalid-feedback">' + message + '</div>');
+        });
+    }
 </script>

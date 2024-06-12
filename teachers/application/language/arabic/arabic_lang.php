@@ -89,6 +89,10 @@ $lang['Please enter an time.']='ادخل مده الاختبار';
 $lang['Please enter degree.']='ادخل درجه النهائيه للاختبار';
 $lang['Please enter  passdegree.']='ادخل درجه النجاح';
 $lang['Please enter  question_count.']='ادخل عدد الاسئله';
+$lang['exam saved']='حفظ الاختبار';
+$lang['exam has been successfully saved']='تم حفظ الاختبار بنجاح';
+$lang['saved']=' الحفظ';
+$lang['']='';
 
 
 

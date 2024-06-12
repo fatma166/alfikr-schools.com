@@ -2,7 +2,7 @@
 
 class Exam_model extends CI_Model {
 
-	private $tableName = "exam_";
+	private $tableName = "exams_";
 
 	function __construct() {
 		parent::__construct();
@@ -10,6 +10,7 @@ class Exam_model extends CI_Model {
 	}
 
 	public function save($data,$table="") {
+		echo $table;
 		$this->db->set($data);
 		if($table=="") {
 			$insert = $this->db

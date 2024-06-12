@@ -23,20 +23,20 @@
 						name="check[]"
 						class="form-check-input"
 						type="checkbox"
-						id="inlineCheckbox1"
-						value=" <?php  echo $question['id'];?>"
+						id="<?php  echo $question['id'];?>"
+
 					/>
 				</div>
 				<h6> <?php  echo $question['title'];?></h6>
 			</div>
 			<div>
 				<input
-					name="arrange[<?php echo $index ?>]"
+					name="arrange[<?php  echo $question['id'];?>]"
 					type="number"
 					class="form-control w-100"
 					placeholder="ترتيب السؤال"
 					aria-label="text"
-					value=""
+
 					required
 				/>
 			</div>
@@ -55,8 +55,8 @@
 						name="check[]"
 						class="form-check-input"
 						type="checkbox"
-						id="inlineCheckbox1"
-						value="<?php  echo $question['id'];?>"
+						id="<?php  echo $question['id'];?>"
+
 					/>
 				</div>
 				<?php if(isset($question['title'])&&($question['title']!="")){?>
@@ -67,12 +67,12 @@
 			</div>
 			<div>
 				<input
-					name="arrange[<?php echo $index ?>]"
+					name="arrange[<?php echo $question['id'] ?>]"
 					type="number"
 					class="form-control w-100"
 					placeholder="ترتيب السؤال"
 					aria-label="text"
-					value=""
+
 					required
 				/>
 			</div>

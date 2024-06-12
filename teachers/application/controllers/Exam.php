@@ -73,7 +73,7 @@ class Exam extends Admin_Controller {
 		//print_r($data['paging']); exit;
 
 		$data['query'] = $result;
-print_r($data);
+//print_r($data);
 
 		if ($this->input->is_ajax_request()) {
 			$this->load->view('exam/partails/questions', $data);
@@ -113,13 +113,15 @@ print_r($data);
 
 		$this->load->library('form_validation');
 
-		$data=$_POST; print_r($data); exit;
-		$checkedQuestions = array_filter($this->input->post('check'));
-		$questionOrderValues = array_intersect_key($this->input->post('arrange'), $checkedQuestions);
-		foreach ($checkedQuestions as $index => $value) {
-			$this->form_validation->set_rules('check[' . $index . ']', 'Checkbox ' . $index, 'in_list['.$value.']');
-			$this->form_validation->set_rules('arrange[' . $index . ']', 'Question Order ' . $index, 'required|numeric');
+		$data=$_POST;
+
+		/*$this->form_validation->set_rules('checkedIds', 'Checked IDs', 'required|is_array');
+		$this->form_validation->set_rules('arrangeValues', 'Arrange Values', 'required|is_array');*/
+		$checkedIds = json_decode($this->input->post('checkedIds'), true);
+		foreach ($checkedIds as $checkedId) {
+			$this->form_validation->set_rules("arrange[$checkedId]", "Arrange Input for Checkbox $checkedId", 'required');
 		}
+
 		if ($this->form_validation->run() == false) {
 			$errors = $this->form_validation->error_array();
 			return $this->output
@@ -130,8 +132,10 @@ print_r($data);
 					'message' => 'validation error !!!'
 				)) );
 		}
-
-
+	//print_r($data);
+		$checkedIds = json_decode($this->input->post('checkedIds'), true);
+		//$arrangeValues= json_decode($this->input->post('arrangeValues'), true);
+		//print_r($arrangeValues); exit;
 		//print_r($this->input->post()); exit;
 
 		if ($this->input->server('REQUEST_METHOD') === 'POST') {
@@ -159,8 +163,8 @@ print_r($data);
 
 
 				$exam=array();
-				$exam_notes=array();
-				$exam_question=array();
+
+
 			$exam['title']=$data['title'];
 			$exam['course_id']=$data['course_types_class'];
 				$exam['group_id']=$data['question_group_id'];
@@ -173,27 +177,21 @@ print_r($data);
 				$exam['question_count']= $data['question_count'];
 				$exam_id= $this->Exam_model->save($exam);
 			foreach ($data['notes'] as $i=>$note){
+				$exam_notes=array();
 				$exam_notes['exam_id']=$exam_id;
 				$exam_notes['notes']=$note;
-				$this->Exam_model->save($exam,'exam_notes');
+				$this->Exam_model->save($exam_notes,'exam_notes');
 
 			}
-				foreach ($data['check'] as $index=>$check){
-					$child_question_arr=array();
-					$child_question_arr['course_type']=$data['course_types_stages'];
-					$child_question_arr['group_id']=$data['question_group_id'];
-					$child_question_arr['parent_id']=$parent_question_id;
-					$child_question_arr['title']=$child_question[0];
-					//$child_question_arr['image']=$data['list_media_main_paths'];
-					$child_question_arr['teacher_id']= $this->session->userdata('teacher_id');
-					$child_question_id= $this->Questionbank_model->save($child_question_arr);
-					foreach ($data['list_answer'][$child_quest_index] as $ans_index=>$ans_value){
-						$answer_arr['question_id']=$child_question_id;
-						$answer_arr['answer']=$ans_value;
-						$answer_arr['image']=$data['list_media_paths'][$child_quest_index][$ans_index];
-						$answer_arr['is_correct']=($data['list_correct_answer'][$child_quest_index][$ans_index]==1)?1:0;
-						$this->Answer_model->save($answer_arr);
-					}
+				foreach ($checkedIds as $index=>$check){
+					$exam_question=array();
+					$exam_question['exam_id']=$exam_id;
+					//$exam_question['group_id']=$data['question_group_id'];
+					$exam_question['question_id']=$check;
+					$exam_question['ordering']=$data['arrange'][$check];
+					$exam_question['grade']=4;
+					$this->Exam_model->save($exam_question,'exams_questions');
+
 
 
 				}
