@@ -67,7 +67,7 @@ $lang['chracter_image_id'] = 'صورة';
 */
 $lang['Next'] = 'التالي';
 $lang['Previous'] = 'السابق';
-$lang['no data available'] = 'لا يوجد أسئله';
+$lang['no data available'] = 'لا يوجد بيانات';
 $lang['Error'] = 'خطأ';
 $lang['An error occurred while'] = 'حدث خطأ في';
 $lang['save question multi'] = 'حفظ سؤال متعدد';

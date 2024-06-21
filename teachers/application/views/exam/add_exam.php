@@ -93,7 +93,7 @@
 						>
 							<label for=""> اسم الأختبار </label>
 							<input
-								name="title"
+								name="exam_title"
 								type="text"
 								class="form-control"
 								placeholder="اسم الأختبار "
@@ -401,19 +401,22 @@
 					</li>
 				</ul>
 				<div class="tab-content mt-4" id="myTabContent">
-				<span id="question_div">
-				<?php include ('partails/questions.php')?>
-				</span>
 
+				<?php include ('partails/questions.php')?>
+
+				</div>
+				<div class="mt-4 d-flex justify-content-center align-items-center flex-row">
 				<button class="submit" id="add_examm"> تأكيد </button>
 				</div>
 			</div>
 			<div class="form__actions mt-5 d-none">
 				<button id="prev__btn" class="">السابق</button>
 			</div>
+
 		</form>
 	</div>
 </div>
+
 
 
 
@@ -442,17 +445,17 @@
             previousButton.classList.add("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.add("active");
-            document.querySelector(".tab_three").classList.add("active");
+           // document.querySelector(".tab_three").classList.add("active");
         } else if (currentStep == 0) {
             previousButton.classList.add("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.remove("active");
-            document.querySelector(".tab_three").classList.remove("active");
+         //   document.querySelector(".tab_three").classList.remove("active");
         } else if (currentStep == 1) {
             previousButton.classList.remove("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.add("active");
-            document.querySelector(".tab_three").classList.remove("active");
+          //  document.querySelector(".tab_three").classList.remove("active");
         } else {
             previousButton.classList.add("hidden");
         }
@@ -464,18 +467,19 @@
             event.preventDefault();
             if (validateForm()) {
                 var course_types_class = $('select[name="course_types_class"]').val();
+
                 var group_id = $('select[name="question_group_id"]').val();
 
                 $.ajax({
                     type:"post",
                     url: "<?Php echo base_url(); ?>exam/getquestion",
                     data:{'course_type':course_types_class,'group_id':group_id},//$("#free_form").serialize(),
-                    processData: false, // Prevent jQuery from automatically processing the data
-                    contentType: false,
+                    //processData: false, // Prevent jQuery from automatically processing the data
+                   // contentType: false,
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success: function(data1) {
-                         $('#question_div').empty();
-                         $('#question_div').append(data1);
+                         $('#myTabContent').empty();
+                         $('#myTabContent').append(data1);
 
 
                     } ,
@@ -542,6 +546,7 @@
 
 <script>
     document.getElementById('add_another_question_free').addEventListener('click', function() {
+        alert("fdshjhfdj");
         var container = document.getElementById('questions_container');
         var newQuestion = document.querySelector('.free_question_ques').cloneNode(true);
 
@@ -602,7 +607,7 @@
         var isValid = true;
 
 
-        var title = $('input[name="title"]').val();
+        var title = $('input[name="exam_title"]').val();
         if (title.trim() === '') {
             isValid = false;
             $('#nex_title').text("<?php echo $this->lang->line('Please enter an title.')?>");
@@ -782,6 +787,7 @@
 
             });
         });
+
     });
     function showErrors(errors) {
         // Clear any previous errors
@@ -797,4 +803,124 @@
             input.parent().append('<div class="invalid-feedback">' + message + '</div>');
         });
     }
+
+    $("#add_question_free").click(function (e) {
+        e.preventDefault();
+
+        // Create a new FormData object
+        var formData = new FormData();
+
+        // Iterate through the form fields and append them to the FormData
+        $('#free_form').find('input, textarea, select').each(function() {
+            var $this = $(this);
+            var name = $this.attr('name');
+
+            if ($this.is('input[type="file"]')) {
+                //alert(this.files);
+                var files = this.files;
+                for (var i = 0; i < files.length; i++) {
+                    // console.log(name);
+                    formData.append(name, files[i]);
+                }
+            } else {
+                formData.append(name, $this.val());
+            }
+        });
+        // console.log(formData);
+        $.ajax({
+            type:"post",
+            url: "<?Php echo base_url(); ?>questionBank/save",
+            data:formData,//$("#free_form").serialize(),
+            processData: false, // Prevent jQuery from automatically processing the data
+            contentType: false,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function(data1) {
+                //  alert("suceess");
+                Swal.fire({
+                    title: "<?php echo $this->lang->line('free question saved')?>",
+                    text: "<?php echo $this->lang->line('free questions has been successfully saved')?>",
+                    icon: 'success',
+                    confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                });
+
+            } ,
+            error: function(xhr, status, error) {
+                // Handle the error response
+                var errorResponse = JSON.parse(xhr.responseText);
+                showErrors(errorResponse.errors);
+
+                //  console.log('Error occurred while fetching options');
+                Swal.fire({
+                    title: "<?php echo $this->lang->line('Error')?>",
+                    text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
+                    icon: 'error',
+                    confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                });
+            }
+
+
+        });
+    });
+    
+    $("#add_ques_list").click(function (e) {
+        // alert("list");
+        e.preventDefault();
+        //  alert("dsjkdsj");
+        // Create a new FormData object
+        var formData = new FormData();
+
+        // Iterate through the form fields and append them to the FormData
+        $('#list_form').find('input, textarea, select').each(function() {
+            var $this = $(this);
+            var name = $this.attr('name');
+
+            if ($this.is('input[type="file"]')) {
+                //  alert(this.files);
+                var files = this.files;
+                for (var i = 0; i < files.length; i++) {
+                    console.log(name);
+                    formData.append(name, files[i]);
+                }
+            } else {
+                formData.append(name, $this.val());
+            }
+        });
+        console.log(formData);
+        $.ajax({
+            type:"post",
+            url: "<?Php echo base_url(); ?>questionBank/save",
+            data:formData,//$("#free_form").serialize(),
+            processData: false, // Prevent jQuery from automatically processing the data
+            contentType: false,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function(data1) {
+                // alert("suceess");
+
+                Swal.fire({
+                    title: "<?php echo $this->lang->line('multi question saved')?>",
+                    text: "<?php echo $this->lang->line('questions has been successfully saved')?>",
+                    icon: 'success',
+                    confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                });
+
+            } ,
+            function(xhr, status, error) {
+                // Handle the error response
+                var errorResponse = JSON.parse(xhr.responseText);
+                showErrors(errorResponse.errors);
+                console.log('Error occurred while fetching options');
+                Swal.fire({
+                    title: "<?php echo $this->lang->line('Error')?>",
+                    text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('save question multi') ?>",
+                    icon: 'error',
+                    confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                });
+            }
+
+
+        });
+    });
+
+
+
 </script>

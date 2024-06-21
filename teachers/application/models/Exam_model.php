@@ -24,16 +24,54 @@ class Exam_model extends CI_Model {
 	}
 
 	public function getById($id,$table="") {
-		$result = $this->db;
+		$this->db->select('e.id, e.title,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name, g.id as group_id, g.name');
+		$this->db->from('exams_ e');
+		$this->db->order_by('e.id','asc');
+
+		$this->db->join('questions_groups g', 'g.id = e.group_id', 'left');
+		$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left'); //course_type
+		$this->db->join('courses_types c', 'c.parent_id = ct.id', 'left');
+		$this->db->group_by('e.id');
+
 		if($table=="") {
-			$result->get_where($this->tableName, array('id' => $id), 1);
+
+			$result=$this->db->get_where($this->tableName, array('e.id' => $id),1);
 		}else{
-			$result->get_where($table, array('id' => $id), 1);
+			$result=$this->db->get_where($table, array('e.id' => $id), 1);
 		}
-		$result->row_array();
+		//$result->row();
+		if( $result->num_rows() > 0 )
+		{
+			return $result->row_array();
+		}else{
+			return (array());
+		}
+		//$result->fetch_assoc();
+		//return $result;
+	}
+public function getattend($id){
+
+		$result=$this->db->select('e.id, e.title,e.degree,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,s.first_name,s.last_name,s.mobile,er.student_id,er.exam_id,er.mark,er.date,er.percentage')
+			->from('exams_results er')
+			->join('exams_ e', 'e.id=er.exam_id', 'left')
+			->join('students  s', 's.id = er.student_id', 'left')
+
+			->get()->result_array();
+	//	print_r($result); exit;
+		return $result;
+}
+	public function getnotattend($id){
+
+		$result=$this->db->select('e.id,e.title,e.degree,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,s.first_name,s.last_name,s.mobile,er.student_id,er.exam_id,er.mark,er.date,er.percentage')
+			->from('students s')
+
+			->join('exams_results er','s.id =er.student_id', 'left')
+			->join('exams_ e','e.id=er.exam_id', 'left')
+			->where('er.exam_id IS NULL')
+			->get()->result_array();
+
 		return $result;
 	}
-
 	public function update($id, $data) {
 		$this->db->where('id', $id);
 		$result = $this->db->update($this->tableName, $data);
@@ -56,11 +94,12 @@ class Exam_model extends CI_Model {
 		if ($search) {
 			$this->db->like('name', $search);
 		}*/
-		if($data_search['stages']){
-			$this->db->where("course_type", $data_search['stages']);
+		if($data_search['stages']&&($data_search['stages']!="all")){
+			//$this->db->where("course_type", $data_search['stages']);
+			$this->db->where("course_id", $data_search['_class']);
 		}
 
-		if($data_search['group_id']){
+		if($data_search['group_id']&&($data_search['group_id']!="all")){
 			$this->db->where("group_id", $data_search['group_id']);
 		}
 
@@ -71,29 +110,77 @@ class Exam_model extends CI_Model {
 
 		$query = $this->db->get($this->tableName);*/
 
-		$this->db->select('q.id, q.title,q.parent_id,q.question_type,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name, g.id as group_id, g.name, GROUP_CONCAT(a.id SEPARATOR "|") AS answer_ids, GROUP_CONCAT(a.answer SEPARATOR "|") AS answers, GROUP_CONCAT(a.is_correct SEPARATOR "|") AS is_correct');
-		$this->db->from('qquestions q');
-		$this->db->order_by('q.id','asc');
-		$this->db->join('aanswers a', 'a.question_id = q.id', 'left');
-		$this->db->join('questions_groups g', 'g.id = q.group_id', 'left');
-		$this->db->join('courses_types ct', 'ct.id = q.	course_type', 'left');
+		$this->db->select('e.id, e.title,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name, g.id as group_id, g.name');
+		$this->db->from('exams_ e');
+		$this->db->order_by('e.id','asc');
+
+		$this->db->join('questions_groups g', 'g.id = e.group_id', 'left');
+		$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left'); //course_type
 		$this->db->join('courses_types c', 'c.parent_id = ct.id', 'left');
-		$this->db->group_by('q.id');
+		$this->db->where('e.deleted_at IS NULL');
+		$this->db->group_by('e.id');
+		/*if($t == 'result'){
+			$this->db->limit($limit);
+			$this->db->offset($start);
+		}*/
+		$data = $this->db->get();
+//print_r($this->db->last_query());exit;
+		//print_r($data->result_array()); exit;
+		$questions = array();
+
+
+
+
+
+		//}
+		//print_r($data); exit;
+		//return $questions;
+
+		if ($t=='result') {
+		//	$data = array_slice($data, $start, $limit);
+			return $data->result_array();
+		} else {
+				return $data->num_rows();
+			//return(count($data->result_array()));
+		}
+	}
+
+
+	public function get_exam_question($data_search,$id,$t='result',$limit,$start){
+		$this->db->select('q.id as qid, q.title as qtitle,q.parent_id,q.question_type,e.id, e.title,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name,GROUP_CONCAT(a.id SEPARATOR "|") AS answer_ids, GROUP_CONCAT(a.answer SEPARATOR "|") AS answers, GROUP_CONCAT(a.is_correct SEPARATOR "|") AS is_correct');
+		$this->db->from('qquestions q');
+		//$this->db->from('exams_ e');
+
+
+		$this->db->join('exams_questions eq', 'eq.question_id = q.id', 'left');
+		$this->db->join('exams_ e', 'e.id = eq.exam_id', 'left');
+		$this->db->join('aanswers a', 'a.question_id = q.id', 'left');
+		$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left'); //course_type
+		$this->db->join('courses_types c', 'c.parent_id = ct.id', 'left');
+		$this->db->where('eq.exam_id',$id);
+		$this->db->order_by('eq.ordering','asc');
+
+		$this->db->group_by('e.id');
 		/*if($t == 'result'){
 			$this->db->limit($limit);
 			$this->db->offset($start);
 		}*/
 		$query = $this->db->get();
-//print_r($this->db->last_query());exit;
-		//print_r($query->result_array()); exit;
 		$questions = array();
 		$data=array();
 		foreach ($query->result_array() as $row) {
 			$questions[] = array(
 				'id' => $row['id'],
 				'title' => $row['title'],
-				'group_id' => $row['group_id'],
-				'group_name' => $row['name'],
+				'active' => $row['active'],
+				'minutes' => $row['minutes'],
+				'details' => $row['details'],
+				'type' => $row['type'],
+				'start_date' => $row['start_date'],
+				'end_date' => $row['end_date'],
+				'qid' => $row['qid'],
+				'qtitle' => $row['qtitle'],
+				'question_type' => $row['question_type'],
 				'parent_id' => $row['parent_id'],
 				'question_type' => $row['question_type'],
 				'ar_name' => $row['ar_name'],
@@ -139,9 +226,8 @@ class Exam_model extends CI_Model {
 			//	return $data->num_rows();
 			return(count($data));
 		}
+		return($data);
 	}
-
-
 	public function getSortingData() {
 
 		$this->db->select('id,name,logo,sorting');
@@ -157,7 +243,12 @@ class Exam_model extends CI_Model {
 
 
 	public function deleteRecord($id){
-		$result = $this->db->delete($this->tableName,  array('id'=>$id));
+		$data = array(
+			'deleted_at' => date('Y-m-d H:i:s')
+		);
+		$result=$this->db->where('id',$id)
+			      ->update($this->tableName,$data);
+
 		return $result;
 	}
 	public function getBrandsByIds($ids){

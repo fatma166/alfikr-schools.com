@@ -112,7 +112,7 @@ class QuestionBank extends Admin_Controller {
 
 		$this->load->library('form_validation');
 
-		$data=$_POST; //print_r($data);
+		$data=$_POST; //print_r($data);exit;
 			$this->form_validation->set_rules('course_types_stages', 'Stages', 'required');
 			$this->form_validation->set_rules('course_types_class', 'Class', 'required');
 			$this->form_validation->set_rules('question_group_id', 'Group', 'required');
