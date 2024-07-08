@@ -92,7 +92,7 @@ $lang['Please enter  question_count.']='ادخل عدد الاسئله';
 $lang['exam saved']='حفظ الاختبار';
 $lang['exam has been successfully saved']='تم حفظ الاختبار بنجاح';
 $lang['saved']=' الحفظ';
-$lang['']='';
+$lang['Please enter subject.']='اختر الماده العلميه';
 
 
 

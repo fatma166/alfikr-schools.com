@@ -2,7 +2,7 @@
 	class="header__page d-flex justify-content-between align-items-start flex-row flex-wrap w-100"
 >
 	<div class="title_page">
-		<h2>الأختبارات</h2>
+		<h2><?php if($data_search['page_type']=="exam"){ echo "الأختبارات"; }elseif ($data_search['page_type']=="exercise"){echo "التمارين";}else{echo "الواجبات";}?></h2>
 		<nav>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
@@ -12,7 +12,7 @@
 					القسم الإداري
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-					الأختبارات
+					<?php if($data_search['page_type']=="exam"){ echo "الأختبارات"; }elseif ($data_search['page_type']=="exercise"){echo "التمارين";}else{echo "الواجبات";}?>
 				</li>
 			</ol>
 		</nav>
@@ -59,7 +59,7 @@
 			/>
 			<span> إستيراد </span>
 		</button>
-		<a href="./add-exam.html" class="add_student">
+		<a  href="<?php echo base_url()?>exam/add<?php if (isset($data_search['type_id'])) echo '?type='.$data_search['type_id'];?>" class="add_student">
 			<svg
 				width="20"
 				height="20"
@@ -77,7 +77,7 @@
 					stroke-linejoin="round"
 				/>
 			</svg>
-			<span> إضافة اختبار </span>
+			<span>  <?php if($data_search['page_type']=="exam"){ echo "إضافة اختبار"; }elseif ($data_search['page_type']=="exercise"){echo "اضافة تمارين";}else{echo "اضافة الواجب";}?></span>
 		</a>
 	</div>
 </div>
@@ -95,7 +95,7 @@
 
 				<option selected disabled>المراحل الدراسية</option>
 				<?php foreach($course_types as $course_type_arr) {?>
-					<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
+					<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->parent_id==0)  echo $course_type_arr[0]->ar_name;?></option>
 				<?php }?>
 			</select>
 
@@ -104,15 +104,12 @@
 			<label for=""> الصف الدراسي </label>
 
 			<select
-					name="course_types_class"
-					id="_class"
-					class="form-select form-control course_types_class"
-				>
+				name="course_types_class"
+				id="_class"
+				class="form-select form-control course_types_class"
+			>
 				<option selected disabled>الصف الدراسي</option>
-				<option value="test">صف 1</option>
-				<option value="">صف 2</option>
-				<option value="">صف 3</option>
-				<option value="">صف 4</option>
+
 			</select>
 		</div>
 		<div class="d-flex justify-content-start align-items-start flex-column gap-1">
@@ -123,9 +120,7 @@
 				class="form-select form-control question_group_id"
 			>
 				<option selected disabled>الشعب</option>
-				<?php foreach($questions_groups as $group) {?>
-					<option value="<?php echo $group['id']; ?>"><?php echo $group['name']; ?> </option>
-				<?php }?>
+
 
 			</select>
 		</div>
@@ -143,13 +138,13 @@
     $('.form-check-input').on('change', function() {
 
         var switchValue = $(this).prop('checked');
-
+        alert(switchValue);
         var id = $(this).attr('id_attr');
 
         updateSwitchValue(switchValue,id);
     });
 
-    function updateSwitchValue(id, value) {
+    function updateSwitchValue( value ,id) {
         $.ajax({
             url: "<?php echo base_url(); ?>exam/publish",
             type: 'GET',
@@ -162,6 +157,7 @@
                 console.log('Switch value updated:', response);
                 $(".table_data").empty();
                 $(".table_data").append(response);
+                //	location.reload(true);
                 $('.print_button').attr('href', "<?php echo base_url()?>" + "exam/index?stages=" + stages + "&_class=" + _class + "&group_id=" + group_id + "&print=true");
             },
             error: function(xhr, status, error) {
@@ -192,6 +188,9 @@
                         $.each(data1, function (index, value) {
 
                             $('#_class').append('<option value="' + value.id + '">' + value.ar_name + '</option>');
+                            if(index==0){
+                                getgroup(value.id);
+                            }
                         });
                     } else {
                         $('#_class').append('<option value="">Select an option</option>');
@@ -229,7 +228,82 @@
         });
 
 
+        $('#_class').on('change', function () {
+            class_id_= $(this).val();
+            getgroup(class_id_);
+        });
     });
+
+    function getgroup(class_return) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+        $('#question_group_id').empty();
+
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_groups",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+                    $('#question_group_id').append('<option value="">الكل</option>');
+                    $.each(data1, function (index, value) {
+
+                        $('#question_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#question_group_id').append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
+
+
+    function getsubject(class_return,selector_name) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+
+        $('#'+selector_name).empty();
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_subject",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+
+                    $.each(data1, function (index, value) {
+
+                        $('#'+selector_name).append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#'+selector_name).append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
 	<?php if(isset($_GET["print"])&&$_GET["print"]){?>
 
     window.print();

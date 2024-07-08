@@ -2,7 +2,7 @@
 	class="header__page d-flex justify-content-between align-items-start flex-row flex-wrap w-100"
 >
 	<div class="title_page">
-		<h2>الأختبارات</h2>
+		<h2><?php if($exam_type=="exam"){ echo "الأختبارات"; }elseif ($exam_type=="exercise"){echo "التمارين";}else{echo "الواجبات";}?></h2>
 		<nav>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
@@ -12,7 +12,7 @@
 					القسم الإداري
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-					الأختبارات
+					<?php if($exam_type=="exam"){ echo "الأختبارات"; }elseif ($exam_type=="exercise"){echo "التمارين";}else{echo "الواجبات";}?>
 				</li>
 			</ol>
 		</nav>
@@ -24,7 +24,7 @@
 			<div
 				class="d-flex justify-content-start align-items-start flex-column gap-2 mb-5"
 			>
-				<p>عنوان الأختبار</p>
+				<p> عنوان<span class="ml-2"></span>  <?php if($exam_type=="exam"){ echo "الاختبار"; }elseif ($exam_type=="exercise"){echo "التمرين";}else{echo "الواجب";}?></p>
 				<span><?php echo $data['title'];  ?> </span>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 				class="d-flex justify-content-start align-items-start flex-column gap-2 mb-5"
 			>
 				<p>المادة</p>
-				<span> مادة 1 </span>
+				<span><?php echo $data['subject_name']?>  </span>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -73,7 +73,7 @@
 				class="d-flex justify-content-start align-items-start flex-column gap-2 mb-5"
 			>
 				<p>علامات الطالب</p>
-				<span> علامات الطالب </span>
+				<span> <?php  echo $marks['total_marks']?> </span>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -89,7 +89,7 @@
 				class="d-flex justify-content-start align-items-start flex-column gap-2 mb-5"
 			>
 				<p>النوع</p>
-				<span>  <?php echo $data['type']?>   </span>
+				<span>  <?php echo $exam_type?>   </span>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -167,7 +167,7 @@
 				<thead>
 				<tr>
 					<th>اسم الطالب</th>
-					<th>تاريخ الأختبار</th>
+					<th>تاريخ <span class="ml-2"></span>  <?php if($exam_type=="exam"){ echo "الاختبار"; }elseif ($exam_type=="exercise"){echo "التمرين";}else{echo "الواجب";}?></th>
 					<th>المدة</th>
 					<th>الدرجة</th>
 					<th>الدرجة النهائية</th>
@@ -175,13 +175,13 @@
 				</thead>
 				<tbody>
 				<?php  foreach($student_attends as $index=>$attend){?>
-				<tr>
-					<td class="sorting_1"> <?php  echo $attend['first_name']."  ".$attend['last_name']?></td>
-					<td><?php  echo $attend['date']?></td>
-					<td><?php  echo $attend['minutes']?> دقيقة</td>
-					<td><?php  echo $attend['mark']?></td>
-					<td><?php  echo $attend['degree']?></td>
-				</tr>
+					<tr>
+						<td class="sorting_1"> <?php  echo $attend['first_name']."  ".$attend['last_name']?></td>
+						<td><?php  echo $attend['date']?></td>
+						<td><?php  echo $attend['minutes']?> دقيقة</td>
+						<td><?php  echo $attend['mark']?></td>
+						<td><?php  echo $attend['degree']?></td>
+					</tr>
 				<?php }?>
 				</tbody>
 			</table>
@@ -204,12 +204,12 @@
 				</thead>
 				<tbody>
 				<?php  foreach($student_not_attends as $index=>$notattend){?>
-				<tr>
-					<td>ا <?php  echo $notattend['first_name']."  ".$notattend['last_name']?></td>
-					<td><?php  echo $notattend['start_date']?></td>
-					<td><?php  echo $notattend['last_name']?></td>
-					<td> <a href="whatsapp://send?phone=+<?php echo $notattend['mobile']?>"> <img src="../../assets/images/whatsapp.svg" alt="whatsapp" height="24" width="24"> </a> </td>
-				</tr>
+					<tr>
+						<td>ا <?php  echo $notattend['first_name']."  ".$notattend['last_name']?></td>
+						<td><?php echo $data['start_date']?></td>
+						<td><?php  echo $notattend['last_name']?></td>
+						<td> <a href="whatsapp://send?phone=+<?php echo $notattend['mobile']?>"> <img src="../../../assets/images/whatsapp.svg"  height="24" width="24"> </a> </td>
+					</tr>
 				<?php }?>
 				</tbody>
 			</table>
@@ -228,39 +228,39 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-	$("#pills-questions-tab").on('click',function () {
+        $("#pills-questions-tab").on('click',function () {
 
 
-    $.ajax({
-        type:"post",
-        url: "<?Php echo base_url(); ?>exam/get_exam_question",
-       data:{"id":"<?php  echo $data['id']; ?>","question_type":"details"},//$("#free_form").serialize(),
-        //processData: false, // Prevent jQuery from automatically processing the data
-        // contentType: false,
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        success: function(data1) {
+            $.ajax({
+                type:"post",
+                url: "<?Php echo base_url(); ?>exam/get_exam_question",
+                data:{"id":"<?php  echo $data['id']; ?>","question_type":"details"},//$("#free_form").serialize(),
+                //processData: false, // Prevent jQuery from automatically processing the data
+                // contentType: false,
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function(data1) {
 
-            $('#pills-questions').empty();
-            $('#pills-questions').append(data1);
+                    $('#pills-questions').empty();
+                    $('#pills-questions').append(data1);
 
 
-        } ,
-        error: function(xhr, status, error) {
-            // Handle the error response
-            var errorResponse = JSON.parse(xhr.responseText);
-            showErrors(errorResponse.errors);
+                } ,
+                error: function(xhr, status, error) {
+                    // Handle the error response
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    showErrors(errorResponse.errors);
 
-            //  console.log('Error occurred while fetching options');
-            Swal.fire({
-                title: "<?php echo $this->lang->line('Error')?>",
-                text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
-                icon: 'error',
-                confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                    //  console.log('Error occurred while fetching options');
+                    Swal.fire({
+                        title: "<?php echo $this->lang->line('Error')?>",
+                        text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
+                        icon: 'error',
+                        confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                    });
+                }
+
+
             });
-        }
-
-
-    });
-    });
+        });
     });
 </script>

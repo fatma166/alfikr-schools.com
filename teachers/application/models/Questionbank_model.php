@@ -24,7 +24,7 @@ class Questionbank_model extends CI_Model {
 		}else{
 			$result->get_where($table, array('id' => $id), 1);
 		}
-			$result->row_array();
+		$result->row_array();
 		return $result;
 	}
 
@@ -34,8 +34,8 @@ class Questionbank_model extends CI_Model {
 		return $result;
 	}
 
-	public function getAllData($data_search /*$search = NULL, $order = NULL, $orderType = 'desc',$published='all',$featured='all'*/, $t='result', $limit, $start) {
-
+	public function getAllData($data_search /*$search = NULL, $order = NULL, $orderType = 'desc',$published='all',$featured='all'*/, $t='result', $limit=0, $start=10) {
+//print_r($data_search);
 		/*if ($order) {
 			$this->db->order_by($order, $orderType);
 		} else {
@@ -50,15 +50,7 @@ class Questionbank_model extends CI_Model {
 		if ($search) {
 			$this->db->like('name', $search);
 		}*/
-		if($data_search['stages']){
-			$this->db->where("course_type", $data_search['stages']);
-		}
-		if($data_search['_class']){
-			//$this->db->where("class_id", $data_search['_class']);
-		}
-		if($data_search['group_id']){
-			$this->db->where("group_id", $data_search['group_id']);
-		}
+
 
 		/* $this->db->select('q.*, g.id as group_id, g.name, a.image as answer_image, a.answer, a.id as answer_id, a.is_correct, a.question_id as question_id');
 		$this->db->from('qquestions q');
@@ -67,21 +59,35 @@ class Questionbank_model extends CI_Model {
 
 		$query = $this->db->get($this->tableName);*/
 
-		$this->db->select('q.id, q.title,q.parent_id,q.question_type,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name, g.id as group_id, g.name, GROUP_CONCAT(a.id SEPARATOR "|") AS answer_ids, GROUP_CONCAT(a.answer SEPARATOR "|") AS answers, GROUP_CONCAT(a.is_correct SEPARATOR "|") AS is_correct');
+		$this->db->select('q.id, q.title,q.parent_id,q.question_type,ct.ar_name,ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name, g.id as group_id, g.name, GROUP_CONCAT(a.id SEPARATOR "|") AS answer_ids, GROUP_CONCAT(a.answer SEPARATOR "|") AS answers, GROUP_CONCAT(a.is_correct SEPARATOR "|") AS is_correct ,ms.id as subject_id,ms.name as subject_name');
 		$this->db->from('qquestions q');
 		$this->db->order_by('q.id','asc');
 		$this->db->join('aanswers a', 'a.question_id = q.id', 'left');
-		$this->db->join('questions_groups g', 'g.id = q.group_id', 'left');
-		$this->db->join('courses_types ct', 'ct.id = q.	course_type', 'left');
-		$this->db->join('courses_types c', 'c.parent_id = ct.id', 'left');
+		$this->db->join(' courses g', 'g.id = q.group_id', 'left');
+		$this->db->join('courses_types ct', 'ct.id = q.course_type', 'left'); //course_type
+		$this->db->join('courses_types c', 'ct.parent_id = c.id', 'left');
+		$this->db->join('main_subjects ms', 'ms.id = q.course_id', 'left');
+		$this->db->order_by('q.id','DESC');
 		$this->db->group_by('q.id');
+
+		if(isset($data_search['_class'])&&$data_search['_class']!="all"){
+			$this->db->where("q.course_type", $data_search['_class']);
+		}elseif (isset($data_search['stages'])&&$data_search['stages']!="all"){
+		//	$this->db->where("q.course_type", $data_search['stages']);
+		}
+		if(isset($data_search['group_id'])&&$data_search['group_id']!="all"){
+			$this->db->where("group_id", $data_search['group_id']);
+		}
+		if(isset($data_search['subject_id'])&&$data_search['subject_id']!="all"){
+			$this->db->where("course_id", $data_search['subject_id']);
+		}
 		/*if($t == 'result'){
 			$this->db->limit($limit);
 			$this->db->offset($start);
 		}*/
 		$query = $this->db->get();
 //print_r($this->db->last_query());exit;
-		//print_r($query->result_array()); exit;
+	//	print_r($query->result_array()); exit;
 		$questions = array();
 		$data=array();
 		foreach ($query->result_array() as $row) {
@@ -94,14 +100,18 @@ class Questionbank_model extends CI_Model {
 				'question_type' => $row['question_type'],
 				'ar_name' => $row['ar_name'],
 				'parent_course_type_ar_name' => $row['parent_course_type_ar_name'],
-				'answers' => array_combine(
-					explode('|', $row['answer_ids']),
-					array_map('trim', explode('|', $row['answers']))
-				),
-				'is_correct' => array_combine(
-					explode('|', $row['answer_ids']),
-					array_map('trim', explode('|', $row['is_correct']))
-				)
+				'answers' => !is_null($row['answer_ids']) && !is_null($row['answers'])
+					? array_combine(
+						explode('|', $row['answer_ids']),
+						array_map('trim', explode('|', $row['answers']))
+					)
+					: [],
+				'is_correct' => !is_null($row['is_correct'])
+					? array_combine(
+						explode('|', $row['answer_ids']),
+						array_map('trim', explode('|', $row['is_correct']))
+					)
+					: [],
 			);
 		}
 
@@ -122,19 +132,19 @@ class Questionbank_model extends CI_Model {
 
 			}
 
-}
+		}
 		//}
 		//print_r($data); exit;
-			//return $questions;
+		//return $questions;
 
-			if ($t=='result') {
-				$data = array_slice($data, $start, $limit);
-				return $data;
-			} else {
+		if ($t=='result') {
+			$data = array_slice($data, $start, $limit);
+			return $data;
+		} else {
 
 			//	return $data->num_rows();
-				return(count($data));
-			}
+			return(count($data));
+		}
 	}
 
 
@@ -156,51 +166,7 @@ class Questionbank_model extends CI_Model {
 		$result = $this->db->delete($this->tableName,  array('id'=>$id));
 		return $result;
 	}
-	public function getBrandsByIds($ids){
-		$this->db
-			->select("id,name")
-			->from($this->tableName);
-		$this->db->where_in('id',$ids);
-		$result = $this->db
-			->get()->result_array();
-		$data = array();
-		if (is_array($result)) {
-			foreach ($result as $item){
-				$one = array();
-				$one['id']=$item['id'];
-				$one['text']=$item['name'];
-				array_push($data, $one);
-			}
-			return $data;
-		} else {
-			return FALSE;
-		}
 
-	}
-
-	public function getBrandsNames(){
-		$this->db
-			->select('id , name');
-//                ->group_by('id');
-
-		$result = $this->db->
-		get($this->tableName)->
-		result_array();
-		if (is_array($result)) {
-			$data = array();
-			foreach ($result as $row) {
-				$data['name'][$row['id']] = $row['name'];
-			}
-			return $data['name'];
-		} else {
-			return $result;
-		}
-	}
-
-	public function total() {
-		$query = $this->db->get('brands')->num_rows();
-		return $query;
-	}
 	function publish($id,$data) {
 		$this->db->where('id', $id);
 		$this->db->update($this->tableName, $data);
@@ -245,7 +211,7 @@ class Questionbank_model extends CI_Model {
 		$data= $this->db->get($table)->result_array();
 		//print_r($this->db->last_query());exit;
 		//print_r($data); exit;
-			return $data;
+		return $data;
 
 		//return $query->result();
 	}

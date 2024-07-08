@@ -102,7 +102,7 @@
 
 				<option selected disabled>المراحل الدراسية</option>
 				<?php foreach($course_types as $course_type_arr) {?>
-				<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
+					<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->parent_id==0)  echo $course_type_arr[0]->ar_name;?></option>
 				<?php }?>
 
 			</select>
@@ -115,11 +115,11 @@
 				class="form-select form-control course_types_class"
 			>
 				<option selected disabled>الصف الدراسي</option>
-				<option value="test">صف 1</option>
-				<option value="">صف 2</option>
-				<option value="">صف 3</option>
-				<option value="">صف 4</option>
-			</select>
+				<!--	<option value="test">صف 1</option>
+					<option value="">صف 2</option>
+					<option value="">صف 3</option>
+					<option value="">صف 4</option>
+	-->			</select>
 		</div>
 		<div class="d-flex justify-content-start align-items-start flex-column gap-1">
 			<label for=""> الشعب </label>
@@ -129,9 +129,7 @@
 				class="form-select form-control question_group_id"
 			>
 				<option selected disabled>الشعب</option>
-				<?php foreach($questions_groups as $group) {?>
-				<option value="<?php echo $group['id']; ?>"><?php echo $group['name']; ?> </option>
-				<?php }?>
+
 
 			</select>
 		</div>
@@ -144,7 +142,7 @@
 
 
 ?>
-<div class="table_data d-flex justify-content-start align-items-start flex-column gap-3 w-100 pb-3 border-bottom border-solid border-fifth-color mb-3">
+<div class="table_data d-flex justify-content-start align-items-start flex-column  w-100   border-fifth-color mb-3">
 	<?php include ('partails/_table.php')?>
 </div>
 
@@ -236,41 +234,44 @@
                 data: {'stage_id': stage_id},
                 dataType: 'json',
                 //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            success: function(data1) {
+                success: function(data1) {
 
 
-                // Add the new options based on the selected value
-                if (stage_id) {
+                    // Add the new options based on the selected value
+                    if (stage_id) {
 
-                    $.each(data1, function (index, value) {
+                        $.each(data1, function (index, value) {
 
-                        $('#_class').append('<option value="' + value.id + '">' + value.ar_name + '</option>');
-                    });
-                } else {
-                    $('#_class').append('<option value="">Select an option</option>');
-                }
-            } ,
+                            $('#_class').append('<option value="' + value.id + '">' + value.ar_name + '</option>');
+                            if(index==0){
+                                getgroup(value.id);
+                            }
+
+                        });
+                    } else {
+                        $('#_class').append('<option value="">Select an option</option>');
+                    }
+                } ,
                 error: function() {
-                console.log('Error occurred while fetching options');
-            }
+                    console.log('Error occurred while fetching options');
+                }
 
 
+            });
         });
-        });
-
 
         $("#search_form").click(function (e) {
             e.preventDefault();
             var stages = $(".course_types_stages").val();
             var _class = $(".course_types_class").val();
             var group_id = $(".question_group_id").val();
-           // alert(group_id);
+            // alert(group_id);
 
             $.ajax({
                 type:"get",
                 url: "<?Php echo base_url(); ?>questionBank/index",
                 data: {'stages': stages, '_class': _class, 'group_id': group_id},
-              //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 
             }).done(function(data) {
                 history.pushState('', '',"<?php echo base_url()?>"+"questionBank/index?stages="+stages+"&_class="+_class+"&group_id="+group_id);
@@ -281,8 +282,47 @@
             });
         });
 
-
+        $('#_class').on('change', function () {
+            class_id_= $(this).val();
+            getgroup(class_id_);
+        });
     });
+
+
+    function getgroup(class_return) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+        $('#question_group_id').empty();
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_groups",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+                    $('#question_group_id').append('<option value="">الكل</option>');
+                    $.each(data1, function (index, value) {
+
+                        $('#question_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#question_group_id').append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
+
 	<?php if(isset($_GET["print"])&&$_GET["print"]){?>
 
     window.print();

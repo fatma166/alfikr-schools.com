@@ -2,7 +2,7 @@
 function is_should_show_list($key, $no = 2)
 {
     if ($key == 0) {
-        $names = ['master/students_page','master/lessons_timetable','master/teachers_files','master/teacher_comments_page','master/questions_bank','master/messages_box','master/exams','master/main_subjects'];
+        $names = ['master/students_page','master/lessons_timetable','master/teachers_files','master/teacher_comments_page','master/questions_bank','master/messages_box','master/exams','master/main_subjects','exam/index','questionBank/index'];
     }
     foreach ($names as $one) {
       if ($no = 1) {
@@ -97,7 +97,7 @@ function is_should_show_list($key, $no = 2)
 
         </div>
       </div>
-      <div class="logout__">
+      <div class="logout__" style="position: relative !important;">
         <button onclick="location.href='<?php echo base_url(); ?>login/logout'">
           <svg
             width="24"

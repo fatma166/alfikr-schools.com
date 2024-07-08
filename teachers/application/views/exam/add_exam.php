@@ -2,7 +2,7 @@
 	class="header__page d-flex justify-content-between align-items-start flex-row flex-wrap w-100"
 >
 	<div class="title_page">
-		<h2>الأختبارات</h2>
+		<h2><?php if($page_type=="exam"){ echo "الأختبارات"; }elseif ($page_type=="exercise"){echo "التمارين";}else{echo "الواجبات";}?></h2>
 		<nav>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
@@ -12,7 +12,7 @@
 					القسم الإداري
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-					الأختبارات
+					<?php if($page_type=="exam"){ echo "الأختبارات"; }elseif ($page_type=="exercise"){echo "التمارين";}else{echo "الواجبات";}?>
 				</li>
 			</ol>
 		</nav>
@@ -49,7 +49,7 @@
 				  />
                 </svg>
               </span>
-              <span class="title"> تفاصيل الأختبار </span>
+              <span class="title"> <?php if($page_type=="exam"){ echo " تفاصيل الأختبار"; }elseif ($page_type=="exercise"){echo "تفاصيل التمارين";}else{echo "تفاصيل الواجبات";}?> </span>
             </span>
 		<span
 			class="tab tab_two d-flex justify-content-center align-items-center flex-column"
@@ -80,7 +80,7 @@
 				  />
                 </svg>
               </span>
-              <span class="title"> اضافة اختبار </span>
+              <span class="title">  <?php if($page_type=="exam"){ echo "اضافة اختبار"; }elseif ($page_type=="exercise"){echo "اضافة تمرين";}else{echo "اضافة واجب";}?></span>
             </span>
 	</div>
 	<div role="tab-list" class="tab-list">
@@ -116,7 +116,7 @@
 
 
 								<?php foreach($course_types as $course_type_arr) { ?>
-									<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
+									<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->parent_id==0)  echo $course_type_arr[0]->ar_name;?></option>
 								<?php }?>
 
 							</select>
@@ -152,11 +152,23 @@
 								class="form-select form-control"
 							>
 								<option selected disabled>الشعبة</option>
-								<?php foreach($questions_groups as $group) {?>
-									<option value="<?php echo $group['id']; ?>"><?php echo $group['name']; ?> </option>
-								<?php }?>
+
 							</select>
 							<div class="invalid-feedback d-block" id="nex_question_group_id"></div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="input_form mb-4">
+							<label for="" class="mb-3"> الماده العلميه </label>
+							<select
+								name="question_subject_id"
+								id="question_subject_id"
+								class="form-select form-control"
+							>
+								<option selected disabled>الماده العلميه</option>
+
+							</select>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -402,11 +414,11 @@
 				</ul>
 				<div class="tab-content mt-4" id="myTabContent">
 
-				<?php include ('partails/questions.php')?>
+					<?php include ('partails/questions.php')?>
 
 				</div>
 				<div class="mt-4 d-flex justify-content-center align-items-center flex-row">
-				<button class="submit" id="add_examm"> تأكيد </button>
+					<button class="submit" id="add_examm"> تأكيد </button>
 				</div>
 			</div>
 			<div class="form__actions mt-5 d-none">
@@ -445,17 +457,17 @@
             previousButton.classList.add("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.add("active");
-           // document.querySelector(".tab_three").classList.add("active");
+            // document.querySelector(".tab_three").classList.add("active");
         } else if (currentStep == 0) {
             previousButton.classList.add("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.remove("active");
-         //   document.querySelector(".tab_three").classList.remove("active");
+            //   document.querySelector(".tab_three").classList.remove("active");
         } else if (currentStep == 1) {
             previousButton.classList.remove("hidden");
             document.querySelector(".tab_one").classList.add("active");
             document.querySelector(".tab_two").classList.add("active");
-          //  document.querySelector(".tab_three").classList.remove("active");
+            //  document.querySelector(".tab_three").classList.remove("active");
         } else {
             previousButton.classList.add("hidden");
         }
@@ -469,17 +481,19 @@
                 var course_types_class = $('select[name="course_types_class"]').val();
 
                 var group_id = $('select[name="question_group_id"]').val();
+                var subject_id = $('select[name="question_subject_id"]').val();
 
                 $.ajax({
                     type:"post",
                     url: "<?Php echo base_url(); ?>exam/getquestion",
-                    data:{'course_type':course_types_class,'group_id':group_id},//$("#free_form").serialize(),
+                    data:{'_class':course_types_class,'group_id':group_id,'subject_id':subject_id},//$("#free_form").serialize(),
                     //processData: false, // Prevent jQuery from automatically processing the data
-                   // contentType: false,
+                    // contentType: false,
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     success: function(data1) {
-                         $('#myTabContent').empty();
-                         $('#myTabContent').append(data1);
+                        $('#myTabContent').empty();
+                        console.log(data1);
+                        $('#myTabContent').append(data1);
 
 
                     } ,
@@ -512,41 +526,10 @@
 </script>
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        function toggleForms() {
-            var freeQuestionForm2 = document.getElementById('question_exist_free');
-            var listQuestionForm2 = document.getElementById('question_exist_list');
-
-            // Get the checked radio button
-            var freeQuestionChecked2 = document.getElementById('free-question').checked;
-            var listQuestionChecked2 = document.getElementById('list-questions').checked;
-
-            // Show/hide forms based on checked state
-            if (freeQuestionChecked2) {
-                freeQuestionForm2.style.display = 'block';
-                listQuestionForm2.style.display = 'none';
-            } else {
-                freeQuestionForm2.style.display = 'none';
-                listQuestionForm2.style.display = 'block';
-            }
-        }
-
-        // Listen for changes in the radio buttons' checked state
-        var radioButtons = document.querySelectorAll('.btn-check');
-        radioButtons.forEach(function(button) {
-            button.addEventListener('change', toggleForms);
-        });
-
-        // Initially call toggleForms to set initial visibility
-        toggleForms();
-    });
-
-</script>
 
 <script>
     document.getElementById('add_another_question_free').addEventListener('click', function() {
-        alert("fdshjhfdj");
+        //    alert("fdshjhfdj");
         var container = document.getElementById('questions_container');
         var newQuestion = document.querySelector('.free_question_ques').cloneNode(true);
 
@@ -614,12 +597,12 @@
         }
         var course_types_stages = $('select[name="course_types_stages"]').val();
 
-            if (course_types_stages === null || course_types_stages.trim() === '') {
+        if (course_types_stages === null || course_types_stages.trim() === '') {
 
 
-                isValid = false;
-                $('#nex_course_types_stages').text("<?php echo $this->lang->line('Please enter an course_types_stages.')?>");
-            }
+            isValid = false;
+            $('#nex_course_types_stages').text("<?php echo $this->lang->line('Please enter an course_types_stages.')?>");
+        }
 
         var course_types_class = $('select[name="course_types_class"]').val();
 
@@ -634,6 +617,13 @@
         if (nex_question_group_id ==null) {
             isValid = false;
             $('#nex_question_group_id').text("<?php echo $this->lang->line('Please enter group_id.')?>");
+        }
+
+        var nex_question_subject_id=$('select[name="question_subject_id"]').val();
+
+        if (nex_question_subject_id ==null) {
+            isValid = false;
+            $('#nex_question_subject_id').text("<?php echo $this->lang->line('Please enter subject.')?>");
         }
         var start_date = $('input[name="start_date"]').val();
         if (start_date.trim() === '') {
@@ -668,7 +658,7 @@
             $('#nex_question_count').text("<?php echo $this->lang->line('Please enter  question_count.')?>");
 
         }
-            return isValid;
+        return isValid;
     }
 
     function change_class(id){
@@ -692,6 +682,11 @@
                     $.each(data1, function (index, value) {
 
                         $('#'+id+'_class').append('<option value="' + value.id + '">' + value.ar_name + '</option>');
+                        if(index==0){
+                            getgroup(value.id);
+                            getsubject(value.id, 'question_subject_id')
+                        }
+
                     });
                 } else {
                     $('#'+id+'_class').append('<option value="">Select an option</option>');
@@ -707,9 +702,13 @@
     }
 
     $(document).ready(function() {
+
         $('input[type="checkbox"]').on('click', function() {
+            alert("fdfe");
             // Update the checked state of the checkbox
             $(this).prop('checked', !$(this).prop('checked'));
+
+
         });
 
         $("#add_examm").click(function (e) {
@@ -745,14 +744,23 @@
                 return $("input[name='arrange"+$(this).attr('id')+"']").val();
             }).get();
 
+            const checkDegree= checkedCheckboxes.map(function() {
+                return $("input[name='checkdegree"+$(this).attr('id')+"']").val();
+            }).get();
+
             checkedCheckboxes.each(function() {
                 $(`input[name="arrange[${$(this).attr('id')}]"]`).prop('required', true);
+            });
+            checkedCheckboxes.each(function() {
+                $(`input[name="checkdegree[${$(this).attr('id')}]"]`).prop('required', true);
             });
 
 // Add the checked IDs and their order to the FormData
             formData.append('checkedIds', JSON.stringify(checkedIds));
             formData.append('arrangeValues', JSON.stringify(arrangeValues));
-             console.log(formData);
+            formData.append('checkDegree', JSON.stringify(checkDegree));
+            formData.append('page_type_id', <?php  echo $type_id;?>);
+           // console.log(formData);
             $.ajax({
                 type:"post",
                 url: "<?Php echo base_url(); ?>exam/save",
@@ -761,6 +769,7 @@
                 contentType: false,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function(data1) {
+                   // connsole.log(data1);
                     // alert("suceess");
                     Swal.fire({
                         title: "<?php echo $this->lang->line('exam saved')?>",
@@ -771,6 +780,7 @@
 
                 } ,
                 error: function(xhr, status, error) {
+                    alert('يرجي مراجعة المدخلات');
                     // Handle the error response
                     var errorResponse = JSON.parse(xhr.responseText);
                     showErrors(errorResponse.errors);
@@ -788,7 +798,82 @@
             });
         });
 
+        $('#q_free_class').on('change', function () {
+            class_id_= $(this).val();
+            getgroup(class_id_,'question_group_id');
+            getsubject(class_id_,'question_subject_id')
+        });
+
     });
+    function getgroup(class_return) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+        $('#question_group_id').empty();
+
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_groups",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+                    $('#question_group_id').append('<option value="">الكل</option>');
+                    $.each(data1, function (index, value) {
+
+                        $('#question_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#question_group_id').append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
+
+    function getsubject(class_return,selector_name) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+
+        $('#'+selector_name).empty();
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_subject",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+
+                    $.each(data1, function (index, value) {
+
+                        $('#'+selector_name).append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#'+selector_name).append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
     function showErrors(errors) {
         // Clear any previous errors
         $('.is-invalid').removeClass('is-invalid');
@@ -796,9 +881,9 @@
 
         // Loop through the errors and display them
         $.each(errors, function(field, message) {
-            alert(field);
+            // alert(field);
             var input = $('[name="' + field + '"]');
-            alert(input);
+            // alert(input);
             input.addClass('is-invalid');
             input.parent().append('<div class="invalid-feedback">' + message + '</div>');
         });
@@ -861,7 +946,7 @@
 
         });
     });
-    
+
     $("#add_ques_list").click(function (e) {
         // alert("list");
         e.preventDefault();

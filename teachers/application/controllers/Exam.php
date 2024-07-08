@@ -11,6 +11,7 @@ class Exam extends Admin_Controller {
 		$this->load->model('CourseType');
 		$this->load->model('Course');
 		$this->load->model('Answer_model');
+		$this->load->model('Questionbank_model');
 
 		$this->load->library('session');
 		$this->load->library('form_validation');
@@ -41,6 +42,18 @@ class Exam extends Admin_Controller {
 		$data_search ['stages'] = (isset($_REQUEST['stages'])) ? $_REQUEST['stages'] : '';
 		$data_search ['_class'] = (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
 		$data_search ['group_id'] = (isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
+		if(isset($_GET['type'])) {
+			$data_search ['type_id'] =$this->input->get('type');
+			$type_id= $this->Exam_model->get_select('exam_types', array('id' => $data_search ['type_id'] ));
+			$data_search['page_type']=$type_id[0]['type'] ;
+		}
+
+		else {
+			$type_id = $this->Exam_model->get_select('exam_types', array('type' => 'exam'));
+			// print_r($type_id); exit;
+			$data_search ['type_id'] = (isset($type_id[0]['id'])) ? $type_id[0]['id'] : 'all';
+			$data_search['page_type']='exam';
+		}
 		//print_r($data_search); exit;
 		/*	$data['order'] = (isset($_REQUEST['order'])) ? $_REQUEST['order'] : 'q.id';
 			$data['order_type'] = (isset($_REQUEST['order_type'])) ? $_REQUEST['order_type'] : 'DESC';
@@ -75,8 +88,11 @@ class Exam extends Admin_Controller {
 		//print_r($data); exit;
 		$data['courses'] = $this->Course->get_courses();
 		$data['questions_groups'] = $this->Exam_model->get_select('questions_groups',array());
+		$data['data_search']=$data_search;
+	//	print_r($data['data_search']); exit;
 		$data['query'] = $result;
-
+		$data['exam_type']=(isset($type_id[0]['ar_name']))?$type_id[0]['ar_name']:'all' ;
+//print_r($data); exit;
 
 		if ($this->input->is_ajax_request()) {
 			$this->load->view('exam/partails/_table', $data);
@@ -109,10 +125,11 @@ class Exam extends Admin_Controller {
 		$config['attributes'] = array('class' => 'page-link');
 		$config['page_query_string'] = TRUE;
 		$config['query_string_segment'] = 'page';
-		$data_search ['stages'] = isset($_POST['course_type'])?$this->input->post('course_type'):"all";
+		$data_search ['stages'] = (isset($_REQUEST['stages'])&&$_REQUEST['stages']!='') ? $_REQUEST['stages'] : "all";
 
-		//$data_search ['_class'] = (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
-		$data_search ['group_id'] =isset($_POST['group_id'])?$this->input->post('group_id'):"all";
+		$data_search ['_class'] = (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
+		$data_search ['group_id'] = (isset($_REQUEST['group_id'])&&$_REQUEST['group_id']!='') ? $_REQUEST['group_id'] : "all";
+		$data_search ['subject_id'] = (isset($_REQUEST['subject_id'])&&$_REQUEST['subject_id']!='') ? $_REQUEST['subject_id'] : "all";
 
 		/*	$data['order'] = (isset($_REQUEST['order'])) ? $_REQUEST['order'] : 'q.id';
 			$data['order_type'] = (isset($_REQUEST['order_type'])) ? $_REQUEST['order_type'] : 'DESC';
@@ -134,10 +151,10 @@ class Exam extends Admin_Controller {
 		$start = ($page - 1) * $config['per_page'];
 		$limit = $config['per_page'];
 
-		$result = $this->Exam_model->getAllData($data_search , 'result', $limit , $start);
-
+		$result= $this->Questionbank_model->getAllData($data_search,'result', $limit , $start);
+//print_r($result); exit;
 		//$config['total_rows'] =count($result) ;//$this->Questionbank_model->getAllData($data['search_string'], $data['order'], $data['order_type'], $data['by_published'], $data['by_featured'], 'total', $config["per_page"], $page);
-		$config['total_rows'] =/*ceil(*/$this->Exam_model->getAllData($data_search,'total',$item_per_page,$postion_row);//$item_per_page)-1;
+		$config['total_rows'] =/*ceil(*/$this->Questionbank_model->getAllData($data_search,'total',$item_per_page,$postion_row);//$item_per_page)-1;
 
 		$q = http_build_query($data_search) . "\n";
 		$config['base_url'] = base_url() . 'exam/add/?' . $q;
@@ -175,8 +192,9 @@ class Exam extends Admin_Controller {
 		$start = ($page - 1) * $config['per_page'];
 		$limit = $config['per_page'];
 		$data_search=array();
-       $id=$this->input->post('id');
+		$id=$this->input->post('id');
 		$data['query'] = $this->Exam_model->get_exam_question($data_search ,$id, 'result', $limit , $start);
+		//print_r($data['query'] ); exit;
 		$data['exam_question']="details";
 		//print_r($result);
 		if(isset($_POST['question_type'])&& $_POST['question_type']=="details"){
@@ -196,7 +214,19 @@ class Exam extends Admin_Controller {
 		//print_r($data); exit;
 		$data['courses'] = $this->Course->get_courses();
 		$data['questions_groups'] = $this->Exam_model->get_select('questions_groups',array());
+		if(isset($_GET['type'])) {
+			$data['type_id'] =$this->input->get('type');
+			$type_id= $this->Exam_model->get_select('exam_types', array('id' => $data['type_id'] ));
+			$data['page_type']=$type_id[0]['type'] ;
+		}
 
+		else {
+			$type_id = $this->Exam_model->get_select('exam_types', array('type' => 'exam'));
+			// print_r($type_id); exit;
+			$data['type_id'] = (isset($type_id[0]['id'])) ? $type_id[0]['id'] : 'all';
+			$data['page_type']='exam';
+		}
+        $data['type_id']=$_GET['type'];
 		$vars['right_menu']= $this->Users_per->fetch_right_menu();
 		$vars['com_title'] = $this->lang->line('exams') . ' - ' . $this->lang->line('add');
 		$vars['com_content'] = $this->load->view('exam/add_exam', $data, true);
@@ -218,40 +248,66 @@ class Exam extends Admin_Controller {
 		$this->load->library('form_validation');
 
 		$data=$_POST;
-		//print_r($data);exit;
+		//print_r($data); exit;
 
 		/*$this->form_validation->set_rules('checkedIds', 'Checked IDs', 'required|is_array');
 		$this->form_validation->set_rules('arrangeValues', 'Arrange Values', 'required|is_array');*/
-		$checkedIds = json_decode($this->input->post('checkedIds'), true);
-		foreach ($checkedIds as $checkedId) {
-			$this->form_validation->set_rules("arrange[$checkedId]", "Arrange Input for Checkbox $checkedId", 'required');
+
+		$checkedIds= json_decode($this->input->post('checkedIds'), true);
+	//	print_r(	$checkedIds); exit;
+		if(count($checkedIds)!=0) {
+		 
+         foreach ($checkedIds as $ind=>$checkedId) {
+                $id_arr= preg_replace('/[^0-9]/', '', $checkedId);
+
+                $ruleKey= "arrange[" . $id_arr . "]";
+              //  echo $ruleKey; exit;
+                $this->form_validation->set_rules($ruleKey, "Arrange Input for Checkbox {$ind}", 'required');
+                $this->form_validation->set_rules("checkdegree[" . $id_arr . "]", "checkdegree Input for Checkbox {$ind}", 'required');
+            }
+		}elseif(isset($data['list_title_main'][0][0])&&(empty($data['list_title_main']) && $data['list_title_main'][0][0] == null)&&(empty($data['title']) && $data['title'][0][0] == null) ){
+			$this->form_validation->set_rules("arrange", "Arrange Input for Checkbox", 'required');
+			$this->form_validation->set_rules("checkdegree", "checkdegree  Input for Checkbox", 'required');
 		}
-		if(isset($data['list_title_main'])&& $data['list_title_main']!="") {
+		//if(isset($data['list_title_main'])&& $data['list_title_main']!="") {
+		if (!empty($data['list_title_main']) && $data['list_title_main'][0][0] !== null) {
+		   
 			//$this->form_validation->set_rules('list_title_main', 'Parent Question', 'required');
+			$this->form_validation->set_rules('list_arrange', 'list_arrange', 'required');
+			$this->form_validation->set_rules('list_degree', 'list_degree', 'required');
 			for ($i = 0; $i < count($this->input->post('list_answer')); $i++) {
 				$this->form_validation->set_rules('list_quest[' . $i . '][]', 'list_quest'. ($i + 1), 'required');
-				//$this->form_validation->set_rules('list_free_arrange[' . $i . '][]', 'list_free_arrange'. ($i + 1), 'required');
-				$this->form_validation->set_rules('list_answer[' . $i . '][]', 'list_answer ' . ($i + 1), 'required_without:list_media_paths[' . $i . '][]');
-				$this->form_validation->set_rules('list_media_paths[' . $i . '][]', 'list_media_paths ' . ($i + 1), 'required_without:list_answer[' . $i . '][]');
+
+				$this->form_validation->set_rules('list_answer[' . $i . '][]', 'list_answer ' . ($i + 1), 'required');
+				//$this->form_validation->set_rules('list_media_paths[' . $i . '][]', 'list_media_paths ' . ($i + 1), 'required');
+			//	$this->form_validation->set_rules('list_answer[' . $i . '][]', 'list_answer ' . ($i + 1), 'required_without:list_media_paths[' . $i . '][]');
+				//	$this->form_validation->set_rules('list_media_paths[' . $i . '][]', 'list_media_paths ' . ($i + 1), 'required_without:list_answer[' . $i . '][]');
 				//$this->form_validation->set_rules('list_correct_answer[' . $i . '][]', 'list_correct_answer' . ($i + 1), 'required');
 			}
 		}
-		if(isset($data['title'])&& (count(end($data['title']))> 0)) {
-
+		//if(isset($data['title'])&& (count(end($data['title']))> 0)) {
+		if (isset($data['title'][0][0])&&!empty($data['title']) && $data['title'][0][0] != null&& $data['title'][0][0]!="") {
+		   
+		 
 			for ($i = 0; $i < count($this->input->post('answer')); $i++) {
-				for ($j = 0; $j < count($data['title'][$i]); $j++) {
+			//	for ($j = 0; $j < count($data['title'][$i]); $j++) {
+		
 					$this->form_validation->set_rules('title[' . $i . '][]', 'Question' . ($i + 1), 'required');
-					$this->form_validation->set_rules('free_arrange[' . $i . '][]', 'free_arrange' . ($i + 1), 'required');
-					$this->form_validation->set_rules('answer[' . $i . '][]', 'answer ' . ($i + 1), 'required_without_all[answer[' . $i . '][], media_paths[' . $i . '][]');
-					$this->form_validation->set_rules('media_paths[' . $i . '][]', 'media_paths ' . ($i + 1), 'required_without_all[answer[' . $i . '][], media_paths[' . $i . '][]');
-				//	$this->form_validation->set_rules('answer[' . $i . '][' . $j . ']', 'answer ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:media_paths[' . $i . '][' . $j . ']');
-				//	$this->form_validation->set_rules('media_paths[' . $i . '][' . $j . ']', 'media_paths ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:answer[' . $i . '][' . $j . ']');
-				}
+					$this->form_validation->set_rules('free_arrange[' . $i . ']', 'free_arrange' . ($i + 1), 'required');
+					$this->form_validation->set_rules('free_degree[' . $i . ']', 'free_degree' . ($i + 1), 'required');
+
+					$this->form_validation->set_rules('answer[' . $i . '][]', 'answer ' . ($i + 1), 'required');
+					//	$this->form_validation->set_rules('answer[' . $i . '][]', 'answer ' . ($i + 1), 'required_without[answer[' . $i . '][], media_paths[' . $i . '][]');
+					//	$this->form_validation->set_rules('media_paths[' . $i . '][]', 'media_paths ' . ($i + 1), 'required_without[answer[' . $i . '][], media_paths[' . $i . '][]');
+					//	$this->form_validation->set_rules('answer[' . $i . '][' . $j . ']', 'answer ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:media_paths[' . $i . '][' . $j . ']');
+					//	$this->form_validation->set_rules('media_paths[' . $i . '][' . $j . ']', 'media_paths ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:answer[' . $i . '][' . $j . ']');
+			//	}
 			}
 			//	$this->form_validation->set_rules('correct_answer[0]', 'correct_answer ', 'required');
 		}
 
 		if ($this->form_validation->run() == false) {
+
 			$errors = $this->form_validation->error_array();
 			return $this->output
 				->set_content_type('application/json')
@@ -262,7 +318,7 @@ class Exam extends Admin_Controller {
 				)) );
 		}
 		//exit;
-	//print_r($data);
+		//print_r($data);
 		$checkedIds = json_decode($this->input->post('checkedIds'), true);
 		//$arrangeValues= json_decode($this->input->post('arrangeValues'), true);
 		//print_r($arrangeValues); exit;
@@ -290,22 +346,24 @@ class Exam extends Admin_Controller {
 				$this->form_validation->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>', '</strong></div>');*/
 			//if ($this->form_validation->run()) {
 
+            $type_id=$this->Exam_model->get_select('exam_types',array('type'=>'exam'));
 
-
-				$exam=array();
+			$exam=array();
 
 
 			$exam['title']=$data['exam_title'];
 			$exam['course_id']=$data['course_types_class'];
-				$exam['group_id']=$data['question_group_id'];
-				$exam['	minutes']=$data['time'];
-				$exam['start_date']=$data['start_date'];
-				$exam['end_date']=$data['end_date'];
-				$exam['added_by']= $this->session->userdata('teacher_id');
-				$exam['degree']= $data['degree'];
-				$exam['pass_degree']= $data['passdegree'];
-				$exam['question_count']= $data['question_count'];
-				$exam_id= $this->Exam_model->save($exam);
+			$exam['group_id']=$data['question_group_id'];
+			$exam['	minutes']=$data['time'];
+			$exam['start_date']=$data['start_date'];
+			$exam['end_date']=$data['end_date'];
+			$exam['added_by']= $this->session->userdata('teacher_id');
+			$exam['degree']= $data['degree'];
+			$exam['pass_degree']= $data['passdegree'];
+			$exam['question_count']= $data['question_count'];
+			$exam['main_subject_id']= $data['question_subject_id'];
+			$exam['type_id']=isset( $data['page_type_id'])?$data['page_type_id']:2;
+			$exam_id= $this->Exam_model->save($exam);
 			foreach ($data['notes'] as $i=>$note){
 				$exam_notes=array();
 				$exam_notes['exam_id']=$exam_id;
@@ -313,20 +371,22 @@ class Exam extends Admin_Controller {
 				$this->Exam_model->save($exam_notes,'exam_notes');
 
 			}
-				foreach ($checkedIds as $index=>$check){
-					$exam_question=array();
-					$exam_question['exam_id']=$exam_id;
+			if(count($checkedIds)!=0) {
+				foreach ($checkedIds as $index => $check) {
+				     $check_= preg_replace('/[^0-9]/', '', $check);
+					$exam_question = array();
+					$exam_question['exam_id'] = $exam_id;
 					//$exam_question['group_id']=$data['question_group_id'];
-					$exam_question['question_id']=$check;
-					$exam_question['ordering']=$data['arrange'][$check];
-					$exam_question['grade']=4;
-					$this->Exam_model->save($exam_question,'exams_questions');
-
+					$exam_question['question_id'] = $check_;
+					$exam_question['ordering'] = $data['arrange'][$check_];
+					$exam_question['grade'] = $data['checkdegree'][$check_];
+					$this->Exam_model->save($exam_question, 'exams_questions');
 
 
 				}
+			}
+			if (isset($data['title'][0][0])&&!empty($data['title']) && $data['title'][0][0] != null&& $data['title'][0][0]!="") {
 
-            if(isset($data['title'])&& (count(end($data['title']))> 0)) {
 				$question_arr=array();
 				$answer_arr=array();
 				//foreach($data as $key=>$values){
@@ -337,6 +397,8 @@ class Exam extends Admin_Controller {
 					//$question_arr[$index]['course_id']=$data['course_id'];
 					$question_arr['teacher_id']=  $this->session->userdata('teacher_id');
 					$question_arr['group_id']=$data['question_group_id'];
+					$question_arr['course_id']= $data['question_subject_id'];
+				
 					//$question_arr['image']=$values['media_paths'][$index][0];
 					$question_id= $this->Exam_model->save($question_arr,'qquestions');
 					foreach ($data['answer'][$index] as $ans_index=>$ans_value){
@@ -351,13 +413,13 @@ class Exam extends Admin_Controller {
 					//$exam_question['group_id']=$data['question_group_id'];
 					$exam_question['question_id']=$question_id;
 					$exam_question['ordering']=$data['free_arrange'][$index];
-					$exam_question['grade']=4;
+					$exam_question['grade']=$data['free_degree'][$index];
 					$this->Exam_model->save($exam_question,'exams_questions');
 
 				}
 			}
-			if(isset($data['list_title_main'])&& $data['list_title_main']!="") {
 
+			if (isset($data['list_title_main'][0][0])&&!empty($data['list_title_main']) && $data['list_title_main'][0][0] != null&& $data['list_title_main'][0][0]!="") {
 				$parent_question=array();
 				$parent_question['course_type']=$data['course_types_class'];
 				$parent_question['group_id']=$data['question_group_id'];
@@ -365,6 +427,7 @@ class Exam extends Admin_Controller {
 				$parent_question['title']=$data['list_title_main'];
 				$parent_question['image']=$data['list_media_main_paths'];
 				$parent_question['teacher_id']= $this->session->userdata('teacher_id');
+				$parent_question['course_id']= $data['question_subject_id'];
 				$parent_question_id= $this->Exam_model->save($parent_question,'qquestions');
 
 				foreach ($data['list_quest'] as $child_quest_index=>$child_question){
@@ -391,14 +454,14 @@ class Exam extends Admin_Controller {
 				$exam_question['exam_id']=$exam_id;
 				//$exam_question['group_id']=$data['question_group_id'];
 				$exam_question['question_id']=$parent_question_id;
-				$exam_question['ordering']=1;//$data['list_arrange'][$index];
-				$exam_question['grade']=4;
+				$exam_question['ordering']=$data['list_arrange'];
+				$exam_question['grade']=$data['list_degree'];
 				$this->Exam_model->save($exam_question,'exams_questions');
 			}
 
 
 		}
-		echo json_encode(array('sucess'=>"done"));
+		echo json_encode(array('sucess'=>"done"));exit;
 		//	return("sucess");
 	}
 
@@ -479,7 +542,7 @@ class Exam extends Admin_Controller {
 				@unlink('./../'.$image );
 			//$this->Questionbank_model->deleteRecord($);
 			//redirect('brands');
-			echo "done";
+			echo "done"; exit;
 		}
 
 	}
@@ -511,12 +574,12 @@ class Exam extends Admin_Controller {
 				$result = $this->upload('list_media');
 				//print_r($result); exit;
 				if (isset($result['path'])) {
-					echo json_encode($result);
+					echo json_encode($result) ;exit;
 				} else {
-					echo json_encode(array('error' => 'Error uploading file.'));
+					echo json_encode(array('error' => 'Error uploading file.')); exit;
 				}
 			} else {
-				echo json_encode(array('error' => 'No file selected.'));
+				echo json_encode(array('error' => 'No file selected.')); exit;
 			}
 		}elseif($this->input->post('question_type')=='media'){
 			if (!empty($_FILES['media']['name'][0])) {
@@ -524,12 +587,12 @@ class Exam extends Admin_Controller {
 				$result = $this->upload('media');
 				//print_r($result); exit;
 				if (isset($result['path'])) {
-					echo json_encode($result);
+					echo json_encode($result);  exit;
 				} else {
-					echo json_encode(array('error' => 'Error uploading file.'));
+					echo json_encode(array('error' => 'Error uploading file.')); exit;
 				}
 			} else {
-				echo json_encode(array('error' => 'No file selected.'));
+				echo json_encode(array('error' => 'No file selected.')); exit;
 			}
 		}else{
 			if (!empty($_FILES['list_media_main']['name'][0])) {
@@ -537,12 +600,12 @@ class Exam extends Admin_Controller {
 				$result = $this->upload('list_media_main');
 				//print_r($result); exit;
 				if (isset($result['path'])) {
-					echo json_encode($result);
+					echo json_encode($result); exit;
 				} else {
-					echo json_encode(array('error' => 'Error uploading file.'));
+					echo json_encode(array('error' => 'Error uploading file.')); exit;
 				}
 			} else {
-				echo json_encode(array('error' => 'No file selected.'));
+				echo json_encode(array('error' => 'No file selected.')); exit;
 			}
 		}
 
@@ -551,6 +614,7 @@ class Exam extends Admin_Controller {
 	public function publish() {
 		$id = $this->input->get('id');
 		$s = $this->input->get('s');
+		//	echo $s;  echo $id; exit;
 		if ($s == 'true') {
 			$s = 1;
 		} else {
@@ -560,17 +624,27 @@ class Exam extends Admin_Controller {
 		$this->Exam_model->publish($id, $record);
 		return($this->index());
 	}
-public function get_detail($id){
-	$data['data']=$this->Exam_model->getById($id);
-	$data['student_attends']=$this->Exam_model->getattend($id);
-	$data['student_not_attends']=$this->Exam_model->getnotattend($id);
+	public function get_detail($id){
+		$data['data']=$this->Exam_model->getById($id);
+		$data['marks']=$this->Exam_model->getmarks($id);
+	
+		$data['student_attends']=$this->Exam_model->getattend($id);
+		if(isset($_GET['type'])) {
+			$get_type_id=$this->input->get('type');
+			$type_id= $this->Exam_model->get_select('exam_types', array('id' => $get_type_id));
+			$data['exam_type']=(isset($type_id[0]['type']))?$type_id[0]['type']:'all';
+		}else{
+			$data['exam_type']="all";
+		}
 
-	$vars['com_title'] = $this->lang->line('exams_details');
-	$vars['right_menu']= $this->Users_per->fetch_right_menu();
-	$vars['com_content'] = $this->load->view('exam/details.php', $data, true);
-	$this->load->view('teacher_temp', $vars);
-}
-public function feature($id, $s) {
+		$data['student_not_attends']=$this->Exam_model->getnotattend($id);
+
+		$vars['com_title'] = $this->lang->line('exams_details');
+		$vars['right_menu']= $this->Users_per->fetch_right_menu();
+		$vars['com_content'] = $this->load->view('exam/details.php', $data, true);
+		$this->load->view('teacher_temp', $vars);
+	}
+	public function feature($id, $s) {
 		if ($s == 'true') {
 			$s = 1;
 		} else {
@@ -620,7 +694,7 @@ public function feature($id, $s) {
 			$this->db->update_batch('brands', $data, 'brands_id');
 			//echo 'the items sorted successfully';
 		}else{
-			echo 'error in sorting please try again';
+			echo 'error in sorting please try again'; exit;
 		}
 
 	}

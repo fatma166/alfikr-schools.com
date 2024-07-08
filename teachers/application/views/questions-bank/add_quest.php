@@ -68,7 +68,7 @@
 
 						<option selected disabled>المرحله</option>
 						<?php foreach($course_types as $course_type_arr) {?>
-							<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
+							<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->parent_id==0)  echo $course_type_arr[0]->ar_name;?></option>
 						<?php }?>
 
 					</select>
@@ -96,9 +96,20 @@
 						class="form-select form-control"
 					>
 						<option selected disabled>الشعبة</option>
-						<?php foreach($questions_groups as $group) {?>
-							<option value="<?php echo $group['id']; ?>"><?php echo $group['name']; ?> </option>
-						<?php }?>
+
+					</select>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="input_form mb-4">
+					<label for="" class="mb-3"> الماده العلميه </label>
+					<select
+						name="question_subject_id"
+						id="question_subject_id"
+						class="form-select form-control"
+					>
+						<option selected disabled>الماده العلميه</option>
+
 					</select>
 				</div>
 			</div>
@@ -152,7 +163,7 @@
 						<label
 							class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
 						>
-							<input name="correct_answer[0][]" type="radio"  value="" onchange="checkCorrect(this, 0,1,'correct_answer')"/>
+							<input name="correct_answer[0][]" type="radio"  value="" class="check_correct" onchange="checkCorrect(this, 0,1,'correct_answer')"/>
 							<input
 								name="answer[0][]"
 								type="text"
@@ -173,7 +184,7 @@
 						<label
 							class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
 						>
-							<input name="correct_answer[0][]" type="radio"  value=""  onchange="checkCorrect(this, 0,2,'correct_answer')"/>
+							<input name="correct_answer[0][]" type="radio"  value="" class="check_correct" onchange="checkCorrect(this, 0,2,'correct_answer')"/>
 							<input
 								type="text"
 								name="answer[0][]"
@@ -194,7 +205,7 @@
 						<label
 							class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
 						>
-							<input name="correct_answer[0][]" type="radio"  value="" onchange="checkCorrect(this, 0,3,'correct_answer')"/>
+							<input name="correct_answer[0][]" type="radio"  value="" class="check_correct" onchange="checkCorrect(this, 0,3,'correct_answer')"/>
 							<input
 								type="text"
 								name="answer[0][]"
@@ -257,7 +268,7 @@
 					>
 						<option selected disabled>المرحلة</option>
 						<?php foreach($course_types as $course_type_arr) {?>
-							<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->ar_name==0)  echo $course_type_arr[0]->ar_name;?></option>
+							<option value="<?php if(isset($course_type_arr[0]->parent_id)&&$course_type_arr[0]->parent_id==0) echo $course_type_arr[0]->id;?>"> <?php if(isset($course_type_arr[0]->ar_name)&&$course_type_arr[0]->parent_id==0)  echo $course_type_arr[0]->ar_name;?></option>
 						<?php }?>
 					</select>
 				</div>
@@ -284,9 +295,21 @@
 						class="form-select form-control"
 					>
 						<option selected disabled>الشعبة</option>
-						<?php foreach($questions_groups as $group) {?>
-							<option value="<?php echo $group['id']; ?>"><?php echo $group['name']; ?> </option>
-						<?php }?>
+
+					</select>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="input_form mb-4">
+					<label for="" class="mb-3"> الماده العلميه </label>
+					<select
+						name="listquestion_subject_id"
+						id="listquestion_subject_id"
+						class="form-select form-control"
+					>
+						<option selected disabled>الماده العلميه</option>
+
 					</select>
 				</div>
 			</div>
@@ -457,139 +480,139 @@
 </div>
 
 <div class="header__page d-flex justify-content-between align-items-start flex-row flex-wrap w-100">
-<!-- Modal delete question -->
-<div
-	class="modal fade DeleteQuestion"
-	id="DeleteQuestion"
-	tabindex="-1"
-	aria-labelledby="exampleModalLabel"
-	aria-hidden="true"
->
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content p-3">
-			<div class="modal-body">
-				<h6>هل تريد أن تحذف هذا السؤال ؟</h6>
-			</div>
-			<div
-				class="modal-footer d-flex justify-content-center align-items-center flex-row gap-3"
-			>
-				<button type="button" class="btn close__" data-bs-dismiss="modal">
-					إغلاق
-				</button>
-				<button type="button" class="btn save__">حذف</button>
+	<!-- Modal delete question -->
+	<div
+		class="modal fade DeleteQuestion"
+		id="DeleteQuestion"
+		tabindex="-1"
+		aria-labelledby="exampleModalLabel"
+		aria-hidden="true"
+	>
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content p-3">
+				<div class="modal-body">
+					<h6>هل تريد أن تحذف هذا السؤال ؟</h6>
+				</div>
+				<div
+					class="modal-footer d-flex justify-content-center align-items-center flex-row gap-3"
+				>
+					<button type="button" class="btn close__" data-bs-dismiss="modal">
+						إغلاق
+					</button>
+					<button type="button" class="btn save__">حذف</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Modal edit question -->
-<div
-	class="modal fade EditQuestion"
-	id="EditQuestion"
-	tabindex="-1"
-	aria-labelledby="exampleModalLabel"
-	aria-hidden="true"
->
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content py-3">
-			<div class="modal-body">
-				<h6>تعديل السؤال</h6>
-				<form action="">
-					<div
-						class="d-flex justify-content-start flex-column align-items-start gap-2 mb-3"
-					>
-						<span> السؤال </span>
-						<input
-							type="text"
-							class="form-control"
-							placeholder="السؤال"
-							value=" ماهي عاصمة مصر ؟ "
-							aria-label="text"
-							required
-						/>
-					</div>
-					<div
-						class="d-flex justify-content-start flex-column align-items-start gap-3"
-					>
-						<span> الأجابات </span>
-						<div class="w-100">
-							<label
-								class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
-							>
-								<input type="radio" name="correct_answer" value="answer1" />
-								<input
-									type="text"
-									class="form-control w-100"
-									placeholder="اجابة 1"
-									aria-label="text"
-									value="القاهرة"
-									required
-								/>
-							</label>
-						</div>
-						<div class="w-100">
-							<label
-								class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
-							>
-								<input type="radio" name="correct_answer" value="answer2" />
-								<input
-									type="text"
-									class="form-control"
-									placeholder="اجابة 2"
-									aria-label="text"
-									value="المحلة"
-									required
-								/>
-							</label>
-						</div>
-						<div class="w-100">
-							<label
-								class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
-							>
-								<input type="radio" name="correct_answer" value="answer3" />
-								<input
-									type="text"
-									class="form-control"
-									placeholder="اجابة 3"
-									aria-label="text"
-									value="الأسكندرية"
-									required
-								/>
-							</label>
-						</div>
-						<div class="w-100">
-							<label
-								class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
-							>
-								<input type="radio" name="correct_answer" value="answer4" />
-								<input
-									type="text"
-									class="form-control"
-									placeholder="اجابة 4"
-									aria-label="text"
-									value="سوهاج"
-									required
-								/>
-							</label>
-						</div>
-					</div>
-					<div
-						class="modal-footer d-flex justify-content-center align-items-center flex-row gap-3"
-					>
-						<button
-							type="button"
-							class="btn close__"
-							data-bs-dismiss="modal"
+	<!-- Modal edit question -->
+	<div
+		class="modal fade EditQuestion"
+		id="EditQuestion"
+		tabindex="-1"
+		aria-labelledby="exampleModalLabel"
+		aria-hidden="true"
+	>
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content py-3">
+				<div class="modal-body">
+					<h6>تعديل السؤال</h6>
+					<form action="">
+						<div
+							class="d-flex justify-content-start flex-column align-items-start gap-2 mb-3"
 						>
-							إغلاق
-						</button>
-						<button type="submit" class="btn save__">حفظ</button>
-					</div>
-				</form>
+							<span> السؤال </span>
+							<input
+								type="text"
+								class="form-control"
+								placeholder="السؤال"
+								value=" ماهي عاصمة مصر ؟ "
+								aria-label="text"
+								required
+							/>
+						</div>
+						<div
+							class="d-flex justify-content-start flex-column align-items-start gap-3"
+						>
+							<span> الأجابات </span>
+							<div class="w-100">
+								<label
+									class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+								>
+									<input type="radio" name="correct_answer" value="answer1" />
+									<input
+										type="text"
+										class="form-control w-100"
+										placeholder="اجابة 1"
+										aria-label="text"
+										value="القاهرة"
+										required
+									/>
+								</label>
+							</div>
+							<div class="w-100">
+								<label
+									class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+								>
+									<input type="radio" name="correct_answer" value="answer2" />
+									<input
+										type="text"
+										class="form-control"
+										placeholder="اجابة 2"
+										aria-label="text"
+										value="المحلة"
+										required
+									/>
+								</label>
+							</div>
+							<div class="w-100">
+								<label
+									class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+								>
+									<input type="radio" name="correct_answer" value="answer3" />
+									<input
+										type="text"
+										class="form-control"
+										placeholder="اجابة 3"
+										aria-label="text"
+										value="الأسكندرية"
+										required
+									/>
+								</label>
+							</div>
+							<div class="w-100">
+								<label
+									class="d-flex justify-content-start align-items-center flex-row gap-3 w-100"
+								>
+									<input type="radio" name="correct_answer" value="answer4" />
+									<input
+										type="text"
+										class="form-control"
+										placeholder="اجابة 4"
+										aria-label="text"
+										value="سوهاج"
+										required
+									/>
+								</label>
+							</div>
+						</div>
+						<div
+							class="modal-footer d-flex justify-content-center align-items-center flex-row gap-3"
+						>
+							<button
+								type="button"
+								class="btn close__"
+								data-bs-dismiss="modal"
+							>
+								إغلاق
+							</button>
+							<button type="submit" class="btn save__">حفظ</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 
 
@@ -631,33 +654,45 @@
     document.getElementById('add_another_question_free').addEventListener('click', function() {
         var container = document.getElementById('questions_container');
         var newQuestion = document.querySelector('.free_question_ques').cloneNode(true);
+
+
+
         var inputField = newQuestion.querySelector('input[name="title[0][]"]');
         inputField.name = `title[${container.children.length}][]`;
+        inputField.value='';
         var correct_answerInputs = newQuestion.querySelectorAll('input[name="correct_answer[0][]"]');
         correct_answerInputs.forEach(function(correct_answerInput, index) {
             correct_answerInput.name = `correct_answer[${container.children.length}][${index}]`;
+            correct_answerInput.value='';
+            correct_answerInput.checked = false;
         });
         var answerInputs = newQuestion.querySelectorAll('input[name="answer[0][]"]');
         answerInputs.forEach(function(answerInput, index) {
             answerInput.name = `answer[${container.children.length}][${index}]`;
+            answerInput.value='';
         });
         var mediaInputs = newQuestion.querySelectorAll('input[name="media[0][]"]');
         mediaInputs.forEach(function(mediaInput, index) {
             mediaInput.name = `media[${container.children.length}][${index}]`;
+            mediaInput.value='';
 
         });
         var media_funInputs = newQuestion.querySelectorAll('input[onchange^="uploadMedia("]');
         media_funInputs.forEach(function(media_funInput, index) {
             media_funInput.setAttribute('onchange', `uploadMedia(this, ${container.children.length}, ${index})`);
+
+
         });
         var correct_funInputs = newQuestion.querySelectorAll('input[onchange^="checkCorrect("]');
-           correct_funInputs.forEach(function(correct_funInput, index) {
+        correct_funInputs.forEach(function(correct_funInput, index) {
             correct_funInput.setAttribute('onchange', `checkCorrect(this, ${container.children.length}, ${index},'correct_answer')`);
         });
 
         var media_pathsInputs = newQuestion.querySelectorAll('input[name="media_paths[0][]"]');
         media_pathsInputs.forEach(function(media_pathsInput, index) {
             media_pathsInput.name = `media_paths[${container.children.length}][${index}]`;
+            media_pathsInput.value='';
+
 
         });
 
@@ -667,10 +702,10 @@
         deleteButton.textContent = 'حذف';
         deleteButton.className = 'delete_question';
         deleteButton.id = 'delete_question_'+delete_counter;
-       deleteButton.addEventListener('click', function() {
-          //
+        deleteButton.addEventListener('click', function() {
+            //
             deleteQuestion('delete_question_',delete_counter);
-           newQuestion.remove();
+            newQuestion.remove();
         });
 
 
@@ -679,26 +714,33 @@
 
         // Append new question to container
         container.appendChild(newQuestion);
-    delete_counter++;
+        delete_counter++;
     });
 </script>
 <script>
     document.getElementById('add_another_question_list').addEventListener('click', function() {
         var container = document.getElementById('list_question_repeat_top');
         var newQuestion = document.querySelector('.list_question_repeat').cloneNode(true);
+
         var inputField = newQuestion.querySelector('input[name="list_quest[0][]"]');
         inputField.name = `list_quest[${container.children.length}][]`;
+        inputField.value='';
         var list_correct_answerInputs = newQuestion.querySelectorAll('input[name="list_correct_answer[0][]"]');
         list_correct_answerInputs.forEach(function(list_correct_answerInput, index) {
             list_correct_answerInput.name = `list_correct_answer[${container.children.length}][${index}]`;
+            list_correct_answerInput.value='';
+             list_correct_answerInput.checked = false;
         });
         var list_answerInputs = newQuestion.querySelectorAll('input[name="list_answer[0][]"]');
         list_answerInputs.forEach(function(list_answerInput, index) {
             list_answerInput.name = `list_answer[${container.children.length}][${index}]`;
+            list_answerInput.value='';
+
         });
         var list_mediaInputs = newQuestion.querySelectorAll('input[name="list_media[0][]"]');
         list_mediaInputs.forEach(function(list_mediaInput, index) {
             list_mediaInput.name = `list_media[${container.children.length}][${index}]`;
+            list_mediaInput.value='';
         });
         var list_media_funInputs = newQuestion.querySelectorAll('input[onchange^="list_uploadMedia("]');
         list_media_funInputs.forEach(function(list_media_funInput, index) {
@@ -711,10 +753,12 @@
         var list_mediaInputs = newQuestion.querySelectorAll('input[name="list_media[0][]"]');
         list_mediaInputs.forEach(function(list_mediaInput, index) {
             list_mediaInput.name = `list_media[${container.children.length}][${index}]`;
+            list_mediaInput.value='';
         });
         var list_media_pathsInputs= newQuestion.querySelectorAll('input[name="list_media_paths[0][]"]');
         list_media_pathsInputs.forEach(function(list_media_pathsInput, index) {
             list_media_pathsInput.name = `list_media_paths[${container.children.length}][${index}]`;
+            list_media_pathsInput.value='';
         });
 
 
@@ -738,63 +782,65 @@
     // jQuery document ready
     $(document).ready(function() {
 
-$("#add_question_free").click(function (e) {
-    e.preventDefault();
+        $("#add_question_free").click(function (e) {
+            e.preventDefault();
 
-    // Create a new FormData object
-    var formData = new FormData();
+            // Create a new FormData object
+            var formData = new FormData();
 
-    // Iterate through the form fields and append them to the FormData
-    $('#free_form').find('input, textarea, select').each(function() {
-        var $this = $(this);
-        var name = $this.attr('name');
+            // Iterate through the form fields and append them to the FormData
+            $('#free_form').find('input, textarea, select').each(function() {
+                var $this = $(this);
+                var name = $this.attr('name');
 
-        if ($this.is('input[type="file"]')) {
-            //alert(this.files);
-            var files = this.files;
-            for (var i = 0; i < files.length; i++) {
-               // console.log(name);
-                formData.append(name, files[i]);
-            }
-        } else {
-            formData.append(name, $this.val());
-        }
-    });
-   // console.log(formData);
-    $.ajax({
-        type:"post",
-        url: "<?Php echo base_url(); ?>questionBank/save",
-        data:formData,//$("#free_form").serialize(),
-        processData: false, // Prevent jQuery from automatically processing the data
-        contentType: false,
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        success: function(data1) {
-                //  alert("suceess");
-            Swal.fire({
-                title: "<?php echo $this->lang->line('free question saved')?>",
-                text: "<?php echo $this->lang->line('free questions has been successfully saved')?>",
-                icon: 'success',
-                confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                if ($this.is('input[type="file"]')) {
+                    //alert(this.files);
+                    var files = this.files;
+                    for (var i = 0; i < files.length; i++) {
+                        // console.log(name);
+                        formData.append(name, files[i]);
+                    }
+                } else {
+                    formData.append(name, $this.val());
+                }
             });
+            // console.log(formData);
+            $.ajax({
+                type:"post",
+                url: "<?Php echo base_url(); ?>questionBank/save",
+                data:formData,//$("#free_form").serialize(),
+                processData: false, // Prevent jQuery from automatically processing the data
+                contentType: false,
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function(data1) {
+                    //  alert("suceess");
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.invalid-feedback').remove();
+                    Swal.fire({
+                        title: "<?php echo $this->lang->line('free question saved')?>",
+                        text: "<?php echo $this->lang->line('free questions has been successfully saved')?>",
+                        icon: 'success',
+                        confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                    });
 
-        } ,
-        error: function(xhr, status, error) {
-            // Handle the error response
-            var errorResponse = JSON.parse(xhr.responseText);
-            showErrors(errorResponse.errors);
+                } ,
+                error: function(xhr, status, error) {
+                    // Handle the error response
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    showErrors(errorResponse.errors);
 
-          //  console.log('Error occurred while fetching options');
-            Swal.fire({
-                title: "<?php echo $this->lang->line('Error')?>",
-                text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
-                icon: 'error',
-                confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                    //  console.log('Error occurred while fetching options');
+                    Swal.fire({
+                        title: "<?php echo $this->lang->line('Error')?>",
+                        text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('free question saved') ?>",
+                        icon: 'error',
+                        confirmButtonText: "<?php echo $this->lang->line('OK')?>"
+                    });
+                }
+
+
             });
-        }
-
-
-    });
-});
+        });
         function showErrors(errors) {
             // Clear any previous errors
             $('.is-invalid').removeClass('is-invalid');
@@ -802,18 +848,18 @@ $("#add_question_free").click(function (e) {
 
             // Loop through the errors and display them
             $.each(errors, function(field, message) {
-                alert(field);
+                //alert(field);
                 var input = $('[name="' + field + '"]');
-                alert(input);
+                //  alert(input);
                 input.addClass('is-invalid');
                 input.parent().append('<div class="invalid-feedback">' + message + '</div>');
             });
         }
 
         $("#add_ques_list").click(function (e) {
-           // alert("list");
+            // alert("list");
             e.preventDefault();
-          //  alert("dsjkdsj");
+            //  alert("dsjkdsj");
             // Create a new FormData object
             var formData = new FormData();
 
@@ -823,7 +869,7 @@ $("#add_question_free").click(function (e) {
                 var name = $this.attr('name');
 
                 if ($this.is('input[type="file"]')) {
-                  //  alert(this.files);
+                    //  alert(this.files);
                     var files = this.files;
                     for (var i = 0; i < files.length; i++) {
                         console.log(name);
@@ -842,7 +888,7 @@ $("#add_question_free").click(function (e) {
                 contentType: false,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function(data1) {
-                   // alert("suceess");
+                    // alert("suceess");
 
                     Swal.fire({
                         title: "<?php echo $this->lang->line('multi question saved')?>",
@@ -872,8 +918,8 @@ $("#add_question_free").click(function (e) {
 
     });
     function change_class(id){
-
-         stage_id =  $('#'+id+'_stages').val();//$(this).val();
+//alert("fdklk");
+        stage_id =  $('#'+id+'_stages').val();//$(this).val();
 
         // Clear the options in the second select menu
         $('#'+id+'_class').empty();
@@ -892,6 +938,16 @@ $("#add_question_free").click(function (e) {
                     $.each(data1, function (index, value) {
 
                         $('#'+id+'_class').append('<option value="' + value.id + '">' + value.ar_name + '</option>');
+                        if(index==0){
+                            if(id=='q_free') {
+                                getgroup(value.id, 'question_group_id');
+                                getsubject(value.id, 'question_subject_id')
+                            } else {
+                                getgroup(value.id, 'q_list_group');
+                                getsubject(value.id, 'listquestion_subject_id')
+                            }
+
+                        }
                     });
                 } else {
                     $('#'+id+'_class').append('<option value="">Select an option</option>');
@@ -905,8 +961,92 @@ $("#add_question_free").click(function (e) {
         });
 
     }
+
+    $('#q_list_class').on('change', function () {
+        class_id_= $(this).val();
+        getgroup(class_id_,'q_list_group');
+        getsubject(class_id_,'listquestion_subject_id')
+    });
+    $('#q_free_class').on('change', function () {
+        class_id_= $(this).val();
+        getgroup(class_id_,'question_group_id');
+        getsubject(class_id_,'question_subject_id')
+    });
+
+    function getsubject(class_return,selector_name) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+
+        $('#'+selector_name).empty();
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_subject",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+
+                    $.each(data1, function (index, value) {
+
+                        $('#'+selector_name).append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#'+selector_name).append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
+
+    function getgroup(class_return,selector_name) {
+        //
+        class_id=class_return;
+        // Clear the options in the second select menu
+
+        $('#'+selector_name).empty();
+        $('#'+selector_name).append('<option value="">الكل</option>');
+        $.ajax({
+            type: "get",
+            url: "<?Php echo base_url(); ?>questionBank/getchild_groups",
+            data: {'class_id': class_id},
+            dataType: 'json',
+            //  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function (data1) {
+
+
+                // Add the new options based on the selected value
+                if (class_id) {
+
+                    $.each(data1, function (index, value) {
+
+                        $('#'+selector_name).append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                } else {
+                    $('#'+selector_name).append('<option value="">Select an option</option>');
+                }
+            },
+            error: function () {
+                console.log('Error occurred while fetching options');
+            }
+
+
+        });
+        //
+    }
+
+
     function uploadMedia(fileInput, index,$answer_number) {
-      //  alert(fileInput);
+        //  alert(fileInput);
         // Create a new FormData object
         var formData = new FormData();
 
@@ -961,7 +1101,7 @@ $("#add_question_free").click(function (e) {
             formData.append('question_type', 'list_media');
         }else{
             formData.append('question_type', 'list_media_main');
-		}
+        }
 
         // Perform the AJAX request to upload the file
         $.ajax({
@@ -978,13 +1118,13 @@ $("#add_question_free").click(function (e) {
                 console.log(data);
                 console.log(data.path);
                 // Update the hidden input field with the file path
-				if(filename=='list_media') {
+                if(filename=='list_media') {
                     $("input[name='list_media_paths[" + index + "][" + $answer_number + "]']").val(data.path);
                 }else{
 
                     $("input[name='list_media_main_paths']").val(data.path);
 
-				}
+                }
                 Swal.fire({
                     title: "<?php echo $this->lang->line('File Uploaded')?>",
                     text: "<?php echo $this->lang->line('The file has been successfully uploaded')?>",
@@ -993,7 +1133,7 @@ $("#add_question_free").click(function (e) {
                 });
             },
             error: function () {
-               console.log('Error occurred while uploading the file.');
+                console.log('Error occurred while uploading the file.');
                 Swal.fire({
                     title: "<?php echo $this->lang->line('Error')?>",
                     text:  "<?php echo $this->lang->line('An error occurred while') .$this->lang->line('uploading the file') ?>",
@@ -1005,12 +1145,12 @@ $("#add_question_free").click(function (e) {
     }
     $('.check_correct:checked').each(function() {
         console.log(this.value);
-   $(this).val("1");
+        $(this).val("1");
     });
 
 
     function deleteQuestion(identifier,questionId) {
-        alert(questionId);
+        //  alert(questionId);
         Swal.fire({
             title: 'Are you sure?',
             text: 'You will not be able to recover this question!',
@@ -1022,8 +1162,8 @@ $("#add_question_free").click(function (e) {
             if (result.isConfirmed) {
                 var mediaPathsValues;
                 // Perform AJAX request to delete the question
-				if(identifier=='delete_question_') {
-                     mediaPathsValues = $("[name*='media_paths[1]']").map(function() {
+                if(identifier=='delete_question_') {
+                    mediaPathsValues = $("[name*='media_paths[1]']").map(function() {
                         return $(this).val();
                     }).get();
 
@@ -1031,7 +1171,7 @@ $("#add_question_free").click(function (e) {
                     console.log(mediaPathsValues);
                 }
 
-alert(mediaPathsValues);
+//alert(mediaPathsValues);
 
                 $.ajax({
                     type: "POST",
@@ -1044,7 +1184,7 @@ alert(mediaPathsValues);
                         console.log(data);
 
                         // Remove the question element from the DOM
-                      //  $('.free_question_ques :nth-child('+delete_counter+')').remove();
+                        //  $('.free_question_ques :nth-child('+delete_counter+')').remove();
 
                         // Show a SweetAlert2 success message
                         Swal.fire({
@@ -1069,29 +1209,33 @@ alert(mediaPathsValues);
             }
         });
     }
-    function checkCorrect(input, question, answer, inputname) {
+        function checkCorrect(input, question, answer, inputname) {
         var selectorString = inputname + "[" + question + "][" + answer + "]";
+        //alert(selectorString);
         var $checkedRadio = $("input[name='" + selectorString + "']:checked");
 
-        // Uncheck all radio buttons with the same name
-        $("input[name='" + selectorString + "']").prop("checked", false);
-       // $("input[name='" + selectorString + "']").val("0");
-		if(inputname=="correct_answer") {
-            $(".check_correct").val("0");
+        //$("input[name='" + selectorString + "']").prop("checked", false);
+        // $("input[name='" + selectorString + "']").val("0");
+        if(inputname=="correct_answer") {
+            $('input[name^="correct_answer[' + question+ ']"]').not(input).prop('checked', false);
+          //  $(".check_correct").val(0);
+          //  $(".check_correct").prop("checked", false);
         }else{
-            $(".listcheck_correct").val("0");
-		}
+            $('input[name^="list_correct_answer[' + question+ ']"]').not(input).prop('checked', false);
+          //  $(".listcheck_correct").val(0);
+          //  $(".listcheck_correct").prop("checked", false);
+        }
         //$("[name*='"+inputname+"["+question+"]']").val("0");
 
         // Check the clicked radio button and set its value to 1
         $(input).prop("checked", true);
         $(input).val("1");
     }
-   /* $('.answer_data').on( "keyup", function() {
-       alert( $(this).val());
-        alert(  $(this).attr('index_'));
-        index_= $(this).attr('index_');
-        $("input[name='correct_answer['+index_+']']").val("1");
-    });*/
-   $(".correct_answer")
-    </script>
+    /* $('.answer_data').on( "keyup", function() {
+		alert( $(this).val());
+		 alert(  $(this).attr('index_'));
+		 index_= $(this).attr('index_');
+		 $("input[name='correct_answer['+index_+']']").val("1");
+	 });*/
+  //  $(".correct_answer")
+</script>
