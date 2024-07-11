@@ -1,0 +1,88 @@
+.statistics__items{
+    @media(max-width:767px){
+        flex-wrap: wrap;
+    }
+    .statistics_item{
+        padding: 5px 25px;
+        border-radius: 12px;
+        width: 100%;
+        .statistics_info{
+            h6{
+                color: #fff;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            span{
+                color: #fff;
+                font-size: 15px;
+                font-weight: 500;
+            }
+        }
+        &:nth-child(1){
+            background-color: #0052cc;
+            border: 1px solid #0052cc;
+        }
+        &:nth-child(2){
+            background-color: #ff9920;
+            border: 1px solid #ff9920;
+        }
+        &:nth-child(3){
+            background-color: #add8e6;
+            border: 1px solid #add8e6;
+        }
+        &:nth-child(4){
+            background-color: #04a08b;
+            border: 1px solid #04a08b;
+        }
+        &.five{
+            background-color: #ff562f;
+            border: 1px solid #ff562f;
+        }
+        &.six{
+            background-color: #331b64;
+            border: 1px solid #331b64;
+        }
+    }
+}
+.statistics__materials{
+    .dt-search,.dt-length,.dt-info,.dt-paging{
+        display: none !important;
+    }
+}
+.notifications__items{
+    background-color: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 12px;
+    h6{
+        background-color: #e6e6e6;
+        border-radius: 12px 12px 0 0;
+        width: 100%;
+        padding: 10px;
+        color: $primary-color;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    .notification__item{
+        padding: 12px;
+        border-bottom: 1px solid #d3d3d3;
+        width: 100%;
+        &:last-child{
+            border-bottom: 0;
+        }
+        p{
+            font-size: 15px;
+            font-weight: 600;
+            color: $primary-color;
+        }
+        span{
+            color: $fifth-color;
+            font-size: 14px;
+            font-weight: 400;
+        }
+    }
+}
+.chart_title{
+    font-size: 16px;
+    font-weight: 600;
+    color: $primary-color;
+}

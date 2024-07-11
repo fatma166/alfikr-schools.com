@@ -1,0 +1,114 @@
+aside {
+    padding: 10px 20px;
+    background-color: $third-color;
+    width: 350px !important;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+    .sidebar_header {
+        width: 100%;
+
+        img {
+            object-fit: cover;
+        }
+    }
+
+    .links__aside {
+        width: 100%;
+
+        .accordion-item {
+            border: 0;
+            margin-bottom: 25px;
+            .accordion-header {
+
+                button {
+                    border-radius: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    flex-direction: row;
+                    gap: 8px;
+                    font-size: 15px;
+                    color: $primary-color;
+                    font-weight: 500;
+                    background-color: $third-color;
+                    &:after {
+                        margin-left: initial !important;
+                        margin-right: auto;
+                    }
+
+                    &:focus {
+                        box-shadow: none;
+                        outline: 0;
+                    }
+
+                    &:not(.collapsed) {
+                        background-color: $third-color;
+                    }
+                }
+            }
+
+            .accordion-body {
+                padding: 0;
+                padding-inline-start: 30px;
+                background-color: $third-color;
+                padding-top: 15px;
+                ul {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    flex-direction: column;
+                    gap: 15px;
+                    padding-inline: 0;
+                    li{
+                        a{
+                            color: $primary-color;
+                            font-size: 14px;
+                            font-weight: 400;
+                            text-decoration: none;
+                            transition: 0.2s all ease-in-out;
+                            &:hover{
+                                color: $second-color;
+                            }
+                            &.active{
+                                color: $second-color;
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .logout__{
+        position: absolute;
+        bottom: 50px;
+        right: 0;
+        right: 20px;
+        button{
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: row;
+            gap: 5px;
+            span{
+                color: $second-color;
+                font-weight: 500;
+                font-size: 600;
+            }
+            path{
+                fill: $second-color;
+                color: $second-color;
+            }
+        }
+    }
+}

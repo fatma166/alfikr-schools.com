@@ -1,0 +1,65 @@
+.filter__action{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-end;
+    label{
+        color: $primary-color;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    input,select{
+        border-radius: 4px;
+        width: 220px;
+        height: 40px;
+        border-color: $fourth-color;
+        font-size: 14px;
+        color: $primary-color;
+        font-size: 14px;
+        color: $primary-color;
+        &:focus{
+            box-shadow: none;
+            border-color: $fourth-color;
+        }
+        option{
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: $primary-color;
+        }
+        &::placeholder{
+            font-size: 14px;
+            color: $primary-color;
+        }
+    }
+    .input-group{
+        span{
+            background-color:#fff;
+            padding-left: 0 !important;
+        }
+        input{
+            border-right: 0 !important;
+        }
+    }
+    .filter_btn{
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        button{
+            background: #fff;
+            border: 1px solid $fourth-color;
+            padding: 8px 25px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            gap: 8px;
+            color: $primary-color;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            height: 40px;
+        }
+    }
+}
