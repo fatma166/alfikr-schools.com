@@ -54,7 +54,7 @@
     });*/
 </script>
 <script>
-    $(document).ready(function () {
+   /* $(document).ready(function () {
         var isSmallScreen = $(window).width() <= 500;
         var table = $("#allExamsTable").DataTable({
             dom:
@@ -86,7 +86,7 @@
                 table.columns.adjust().draw();
             }
         });
-    });
+    });*/
 </script>
 <script>
    /* $(document).ready(function () {

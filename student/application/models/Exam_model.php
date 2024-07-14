@@ -24,7 +24,7 @@ class Exam_model extends CI_Model {
 	}
 
 	public function getById($id,$table="") {
-		$this->db->select('e.id, e.title,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,ct.ar_name,ct.parent_id as course_type_parent_id,c.ar_name as parent_course_type_ar_name,g.id as group_id,g.name,ms.id as subject_id,ms.name as subject_name');
+		$this->db->select('e.id, e.title,e.active,e.minutes,e.degree,e.details,e.type,e.start_date,e.end_date,ct.ar_name,ct.parent_id as course_type_parent_id,c.ar_name as parent_course_type_ar_name,g.id as group_id,g.name,ms.id as subject_id,ms.name as subject_name');
 		$this->db->from('exams_ e');
 		$this->db->order_by('e.id','asc');
 
@@ -81,9 +81,14 @@ public function getattend($id){
         // print_r($this->db->last_query()); exit;
 		return $result;
 	}
-	public function getmarks($id){
-		$marks=$this->db->select('SUM(er.mark) AS total_marks')
-			->from('exams_results er')
+	public function getmarks($id,$type="single"){
+		if($type=="single"){
+			$this->db->select('max(er.mark) AS max_marks');
+		}else{
+			$this->db->select('SUM(er.mark) AS total_marks');
+		}
+
+		$marks=$this->db->from('exams_results er')
 			->where('er.exam_id',$id)
 			->get()->row_array();
 //print_r($marks); exit;
@@ -145,10 +150,10 @@ return($marks);
 		if(isset($data_search['today'])){
 
 			$today = date('Y-m-d');
-			$start_of_day = strtotime($today . ' 00:00:00');
-			$end_of_day = strtotime($today . ' 23:59:59');
-			$this->db->where('er.date >=', $start_of_day)
-				->where('er.date <=', $end_of_day);
+			//$start_of_day = $today . ' 00:00:00';
+			//$end_of_day = $today . ' 23:59:59';
+			$this->db->where('er.date', $today);
+				//->where('er.date <=', $end_of_day);
 		}
 		$this->db->where('e.deleted_at IS NULL');
 		$this->db->group_by('e.id');
@@ -157,7 +162,9 @@ return($marks);
 			$this->db->offset($start);
 		}
 		$data = $this->db->get();
+		if(isset($data_search['today'])) {
 //print_r($this->db->last_query());exit;
+		}
 		//print_r($data->result_array()); exit;
 		$questions = array();
 
@@ -177,6 +184,7 @@ return($marks);
 			//return(count($data->result_array()));
 		}
 	}
+
 
 
 	public function get_exam_question($data_search,$id,$t='result',$limit=10,$start=0){

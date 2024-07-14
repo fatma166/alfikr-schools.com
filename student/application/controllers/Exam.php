@@ -80,8 +80,8 @@ class Exam extends Admin_Controller {
 			$item_per_page = 1;
 		}
 //echo $page; exit;
-		if($page==""){
-			$start=1;
+		if (!$this->input->is_ajax_request()) {
+			$start=0;
 		}else {
 			$start = ($page) * $config['per_page'];
 		}
@@ -118,8 +118,8 @@ class Exam extends Admin_Controller {
 			$data_search['student_id']= $this->session->userdata('student_user_id');
 			$data_search['today']= date('Y-m-d');
 
-			$result_student_today= $this->Exam_model->getAllData($data_search , 'result', $limit ,$start);
-
+			$result_student_today= $this->Exam_model->getAllData($data_search , 'result',$limit,$start);
+//print_r($result_student_today); exit;
 			unset($config['total_rows']);
 			$config['total_rows'] =/*ceil(*/$this->Exam_model->getAllData($data_search,'total',$item_per_page,$postion_row);
 			$q = http_build_query($data_search) . "\n";
@@ -682,9 +682,11 @@ class Exam extends Admin_Controller {
 	}
 	public function get_detail($id){
 		$data['data']=$this->Exam_model->getById($id);
-		$data['marks']=$this->Exam_model->getmarks($id);
+		$data['marks']=$this->Exam_model->getmarks($id,"single");
+		$data['student_results']=$this->Exam_model->get_select('exams_results',array('exam_id'=>$id,'student_id'=> $this->session->userdata('student_user_id'))) ;
+		//print_r($data['marks']); exit;
 	
-		$data['student_attends']=$this->Exam_model->getattend($id);
+		//$data['student_attends']=$this->Exam_model->getattend($id);
 		if(isset($_GET['type'])) {
 			$get_type_id=$this->input->get('type');
 			$type_id= $this->Exam_model->get_select('exam_types', array('id' => $get_type_id));
@@ -693,12 +695,12 @@ class Exam extends Admin_Controller {
 			$data['exam_type']="all";
 		}
 
-		$data['student_not_attends']=$this->Exam_model->getnotattend($id);
+		//$data['student_not_attends']=$this->Exam_model->getnotattend($id);
 
 		$vars['com_title'] = $this->lang->line('exams_details');
 		$vars['right_menu']= $this->Users_per->fetch_right_menu();
 		$vars['com_content'] = $this->load->view('exam/details.php', $data, true);
-		$this->load->view('teacher_temp', $vars);
+		$this->load->view('student_temp', $vars);
 	}
 	public function feature($id, $s) {
 		if ($s == 'true') {

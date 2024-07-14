@@ -22,7 +22,7 @@
 	<div
 		class="wrraper_page d-flex justify-content-start align-items-start flex-column w-100"
 	>
-		<?php $this->load->view('template/header')?>
+		<?php // $this->load->view('template/header')?>
 		<?php if (isset($com_content))  echo $com_content; ?>
 
 	</div>

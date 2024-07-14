@@ -101,7 +101,7 @@
 		<button id="search_form"> فلتر </button>
 	</div>
 </form>
-<div class="table_first">
+<div class="table_first" style="width:100%">
 <?php include ('partails/_table.php')?>
 </div>
 <?php include ('partails/_table_today.php')?>
