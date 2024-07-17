@@ -160,6 +160,51 @@ class Exam extends Admin_Controller {
 
 
 	}
+	public function exam_start($id){
+		$data['query']=$this->Exam_model->get_select("exams_",array('id'=>$id));
+		//print_r($data['query']); exit;
+		if(!empty($data['query'])) {
+			if (isset($data['query'][0]['added_by']))
+				$data['teacher'] = $this->Exam_model->get_select("teachers", array('id' => $data['query'][0]['added_by']));
+			$vars['com_title'] = $this->lang->line('exams');
+			//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('exam/exam_start.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}else{
+			$vars['com_title'] = $this->lang->line('error');
+			//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('error.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}
+	}
+	public function perview_exam($id){
+		$data_search ['stages'] = '';
+		$data_search ['_class'] ='';// (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
+		$data_search ['group_id'] = '';//(isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
+$data_search['type_id']=2;
+		$data_search['student_id']= $this->session->userdata('student_user_id');
+		$exams= $this->Exam_model->getAllData($data_search ,'result',200,0);
+		$result = array_filter($exams, function($item) use ($id) {
+			return $item['id'] == $id;
+		});
+	//	print_r($result); exit;
+		if(empty($result)){
+			$data=array();
+			$vars['com_title'] = $this->lang->line('error');
+			//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('error.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}else {
+			//print_r($exams); exit;
+			$data = $this->get_exam_question($id);
+			$data['exam_details'] = $this->Exam_model->get_select("exams_", array('id' => $id));
+			//	print_r($data['exam_details']); exit;
+			$vars['com_title'] = $this->lang->line('exams');
+			//$vars['right_menu']= $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('exam/exam.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}
+	}
 
 	public function getquestion() {
 
@@ -231,7 +276,9 @@ class Exam extends Admin_Controller {
 		}
 
 	}
-	public function get_exam_question(){
+
+
+	public function get_exam_question($id){
 		$page = $this->input->get('page');
 		$config['per_page'] = 10;
 		if (isset($_GET['page']))
@@ -248,15 +295,16 @@ class Exam extends Admin_Controller {
 		$start = ($page - 1) * $config['per_page'];
 		$limit = $config['per_page'];
 		$data_search=array();
-		$id=$this->input->post('id');
+	//	$id=$this->input->post('id');
 		$data['query'] = $this->Exam_model->get_exam_question($data_search ,$id, 'result', $limit , $start);
 		//print_r($data['query'] ); exit;
 		$data['exam_question']="details";
 		//print_r($result);
-		if(isset($_POST['question_type'])&& $_POST['question_type']=="details"){
+		return($data);
+		/*if(isset($_POST['question_type'])&& $_POST['question_type']=="details"){
 			//print_r($data); exit;
 			$this->load->view('questions-bank/partails/_table', $data);
-		}
+		}*/
 
 	}
 
@@ -301,224 +349,57 @@ class Exam extends Admin_Controller {
 
 	public function save() {
 
-		$this->load->library('form_validation');
+$data_posted=$this->input->post();
+if(!empty($data_posted['selectedAnswers'])){
+	$data_to_insert = array();
+	$questions_posted=array();
+	foreach($data_posted['selectedAnswers'] as $index=> $qusetion_answer){
+		$data_to_insert[] = array(
+			'question_id' => $index,
+			'student_id' => $this->session->userdata('student_user_id'),
+			'answer' => $qusetion_answer[0],
+			'exam_id' => $data_posted['exam_id']
+		);
 
-		$data=$_POST;
-		//print_r($data); exit;
+	}
+	if (!empty($data_to_insert)) {
+		$this->Exam_model->insertBatch_($data_to_insert, 'students_questions_answers');
+	}
+	$student_grade=$this->Exam_model->get_correct_answers($data_posted,$this->session->userdata('student_user_id'));
+	$exam_details=$this->Exam_model->get_select("exams_",array('id'=>$data_posted['exam_id']));
+	//print_r($exam_details); exit;
+	$grade_type=($student_grade>=$exam_details[0]['pass_degree'])?"success":"failed";
+	$exam_results=array('student_id'=>$this->session->userdata('student_user_id'),'exam_id'=>$data_posted['exam_id'],'mark'=>$student_grade,'date'=>date('Y-m-d'),'percentage'=>ceil($student_grade/$exam_details[0]['degree'])*100,'full_mark'=>$exam_details[0]['degree'],"pass_degree"=>$exam_details[0]['pass_degree']);
+	$this->Exam_model->save($exam_results,$table="exams_results");
+	/*$session_data = array(
+		'student_grade' => $student_grade,
+		'full_mark' => $exam_details[0]['degree'],
+		'grade_type' => $grade_type
+	);
 
-		/*$this->form_validation->set_rules('checkedIds', 'Checked IDs', 'required|is_array');
-		$this->form_validation->set_rules('arrangeValues', 'Arrange Values', 'required|is_array');*/
+	$this->session->set_userdata($session_data);*/
 
-		$checkedIds= json_decode($this->input->post('checkedIds'), true);
-	//	print_r(	$checkedIds); exit;
-		if(count($checkedIds)!=0) {
-		 
-         foreach ($checkedIds as $ind=>$checkedId) {
-                $id_arr= preg_replace('/[^0-9]/', '', $checkedId);
+}
 
-                $ruleKey= "arrange[" . $id_arr . "]";
-              //  echo $ruleKey; exit;
-                $this->form_validation->set_rules($ruleKey, "Arrange Input for Checkbox {$ind}", 'required');
-                $this->form_validation->set_rules("checkdegree[" . $id_arr . "]", "checkdegree Input for Checkbox {$ind}", 'required');
-            }
-		}elseif(isset($data['list_title_main'][0][0])&&(empty($data['list_title_main']) && $data['list_title_main'][0][0] == null)&&(empty($data['title']) && $data['title'][0][0] == null) ){
-			$this->form_validation->set_rules("arrange", "Arrange Input for Checkbox", 'required');
-			$this->form_validation->set_rules("checkdegree", "checkdegree  Input for Checkbox", 'required');
-		}
-		//if(isset($data['list_title_main'])&& $data['list_title_main']!="") {
-		if (!empty($data['list_title_main']) && $data['list_title_main'][0][0] !== null) {
-		   
-			//$this->form_validation->set_rules('list_title_main', 'Parent Question', 'required');
-			$this->form_validation->set_rules('list_arrange', 'list_arrange', 'required');
-			$this->form_validation->set_rules('list_degree', 'list_degree', 'required');
-			for ($i = 0; $i < count($this->input->post('list_answer')); $i++) {
-				$this->form_validation->set_rules('list_quest[' . $i . '][]', 'list_quest'. ($i + 1), 'required');
+	}
+	public function result($id){
 
-				$this->form_validation->set_rules('list_answer[' . $i . '][]', 'list_answer ' . ($i + 1), 'required');
-				//$this->form_validation->set_rules('list_media_paths[' . $i . '][]', 'list_media_paths ' . ($i + 1), 'required');
-			//	$this->form_validation->set_rules('list_answer[' . $i . '][]', 'list_answer ' . ($i + 1), 'required_without:list_media_paths[' . $i . '][]');
-				//	$this->form_validation->set_rules('list_media_paths[' . $i . '][]', 'list_media_paths ' . ($i + 1), 'required_without:list_answer[' . $i . '][]');
-				//$this->form_validation->set_rules('list_correct_answer[' . $i . '][]', 'list_correct_answer' . ($i + 1), 'required');
-			}
-		}
-		//if(isset($data['title'])&& (count(end($data['title']))> 0)) {
-		if (isset($data['title'][0][0])&&!empty($data['title']) && $data['title'][0][0] != null&& $data['title'][0][0]!="") {
-		   
-		 
-			for ($i = 0; $i < count($this->input->post('answer')); $i++) {
-			//	for ($j = 0; $j < count($data['title'][$i]); $j++) {
-		
-					$this->form_validation->set_rules('title[' . $i . '][]', 'Question' . ($i + 1), 'required');
-					$this->form_validation->set_rules('free_arrange[' . $i . ']', 'free_arrange' . ($i + 1), 'required');
-					$this->form_validation->set_rules('free_degree[' . $i . ']', 'free_degree' . ($i + 1), 'required');
+		$data['result']=$this->Exam_model->get_select("exams_results",array('exam_id'=>$id,'student_id'=>$this->session->userdata('student_user_id')));
+  if(empty($data['result'])){
+	  $vars['com_title'] = $this->lang->line('error');
+	  //$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+	  $vars['com_content'] = $this->load->view('error.php', $data, true);
+	  $this->load->view('student_temp', $vars);
+  }else {
+	  /*	$data['student_grade']=$this->session->userdata('student_grade');
+		  $data['full_mark']=$this->session->userdata('full_mark');
+		  $data['grade_type']=$this->session->userdata('grade_type');*/
+	  $vars['com_title'] = $this->lang->line('exam result');
+	  //$vars['right_menu']= $this->Users_per->fetch_right_menu();
+	  $vars['com_content'] = $this->load->view('exam/result.php', $data, true);
+	  $this->load->view('student_temp', $vars);
+  }
 
-					$this->form_validation->set_rules('answer[' . $i . '][]', 'answer ' . ($i + 1), 'required');
-					//	$this->form_validation->set_rules('answer[' . $i . '][]', 'answer ' . ($i + 1), 'required_without[answer[' . $i . '][], media_paths[' . $i . '][]');
-					//	$this->form_validation->set_rules('media_paths[' . $i . '][]', 'media_paths ' . ($i + 1), 'required_without[answer[' . $i . '][], media_paths[' . $i . '][]');
-					//	$this->form_validation->set_rules('answer[' . $i . '][' . $j . ']', 'answer ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:media_paths[' . $i . '][' . $j . ']');
-					//	$this->form_validation->set_rules('media_paths[' . $i . '][' . $j . ']', 'media_paths ' . ($i + 1) . ' - Option ' . ($j + 1), 'required_without:answer[' . $i . '][' . $j . ']');
-			//	}
-			}
-			//	$this->form_validation->set_rules('correct_answer[0]', 'correct_answer ', 'required');
-		}
-
-		if ($this->form_validation->run() == false) {
-
-			$errors = $this->form_validation->error_array();
-			return $this->output
-				->set_content_type('application/json')
-				->set_status_header(500)
-				->set_output( json_encode(array(
-					'errors' => $errors,
-					'message' => 'validation error !!!'
-				)) );
-		}
-		//exit;
-		//print_r($data);
-		$checkedIds = json_decode($this->input->post('checkedIds'), true);
-		//$arrangeValues= json_decode($this->input->post('arrangeValues'), true);
-		//print_r($arrangeValues); exit;
-		//print_r($this->input->post()); exit;
-
-		if ($this->input->server('REQUEST_METHOD') === 'POST') {
-			/*if(!empty($_POST['media'])){
-				foreach($_POST['media'] as $ques_index=>$media) {
-					if (!empty($_FILES['logo']['name'])) {
-						$updateResult = $this->upload('logo');
-						if (isset($updateResult['error'])) {
-//                    TODO fix how the error appeared
-							var_dump($updateResult['error']);
-						} else {
-							$tosave['logo'] = $updateResult['path'];
-						}
-					}
-				}
-			}*/
-
-			/*if(empty($_POST['alias'])) $_POST['alias'] = $this->alias($_POST['name']);
-	//            add rules for form validation
-				$this->form_validation->set_rules('alias', 'Alias', 'is_unique[brands.alias]');
-				$this->form_validation->set_rules('name', 'name', 'required');
-				$this->form_validation->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>', '</strong></div>');*/
-			//if ($this->form_validation->run()) {
-
-            $type_id=$this->Exam_model->get_select('exam_types',array('type'=>'exam'));
-
-			$exam=array();
-
-
-			$exam['title']=$data['exam_title'];
-			$exam['course_id']=$data['course_types_class'];
-			$exam['group_id']=$data['question_group_id'];
-			$exam['	minutes']=$data['time'];
-			$exam['start_date']=$data['start_date'];
-			$exam['end_date']=$data['end_date'];
-			$exam['added_by']= $this->session->userdata('teacher_id');
-			$exam['degree']= $data['degree'];
-			$exam['pass_degree']= $data['passdegree'];
-			$exam['question_count']= $data['question_count'];
-			$exam['main_subject_id']= $data['question_subject_id'];
-			$exam['type_id']=isset( $data['page_type_id'])?$data['page_type_id']:2;
-			$exam_id= $this->Exam_model->save($exam);
-			foreach ($data['notes'] as $i=>$note){
-				$exam_notes=array();
-				$exam_notes['exam_id']=$exam_id;
-				$exam_notes['notes']=$note;
-				$this->Exam_model->save($exam_notes,'exam_notes');
-
-			}
-			if(count($checkedIds)!=0) {
-				foreach ($checkedIds as $index => $check) {
-				     $check_= preg_replace('/[^0-9]/', '', $check);
-					$exam_question = array();
-					$exam_question['exam_id'] = $exam_id;
-					//$exam_question['group_id']=$data['question_group_id'];
-					$exam_question['question_id'] = $check_;
-					$exam_question['ordering'] = $data['arrange'][$check_];
-					$exam_question['grade'] = $data['checkdegree'][$check_];
-					$this->Exam_model->save($exam_question, 'exams_questions');
-
-
-				}
-			}
-			if (isset($data['title'][0][0])&&!empty($data['title']) && $data['title'][0][0] != null&& $data['title'][0][0]!="") {
-
-				$question_arr=array();
-				$answer_arr=array();
-				//foreach($data as $key=>$values){
-				foreach ($data['title'] as $index=>$value){
-					$question_arr['parent_id']=0;
-					$question_arr['title']=$value[0];
-					$question_arr['course_type']=$data['course_types_class'];
-					//$question_arr[$index]['course_id']=$data['course_id'];
-					$question_arr['teacher_id']=  $this->session->userdata('teacher_id');
-					$question_arr['group_id']=$data['question_group_id'];
-					$question_arr['course_id']= $data['question_subject_id'];
-				
-					//$question_arr['image']=$values['media_paths'][$index][0];
-					$question_id= $this->Exam_model->save($question_arr,'qquestions');
-					foreach ($data['answer'][$index] as $ans_index=>$ans_value){
-						$answer_arr['question_id']=$question_id;
-						$answer_arr['answer']=$ans_value;
-						$answer_arr['image']=$data['media_paths'][$index][$ans_index];
-						$answer_arr['is_correct']=($data['correct_answer'][$index][$ans_index]==1)?1:0;
-						$this->Exam_model->save($answer_arr,'aanswers');
-					}
-					$exam_question=array();
-					$exam_question['exam_id']=$exam_id;
-					//$exam_question['group_id']=$data['question_group_id'];
-					$exam_question['question_id']=$question_id;
-					$exam_question['ordering']=$data['free_arrange'][$index];
-					$exam_question['grade']=$data['free_degree'][$index];
-					$this->Exam_model->save($exam_question,'exams_questions');
-
-				}
-			}
-
-			if (isset($data['list_title_main'][0][0])&&!empty($data['list_title_main']) && $data['list_title_main'][0][0] != null&& $data['list_title_main'][0][0]!="") {
-				$parent_question=array();
-				$parent_question['course_type']=$data['course_types_class'];
-				$parent_question['group_id']=$data['question_group_id'];
-				$parent_question['parent_id']=0;
-				$parent_question['title']=$data['list_title_main'];
-				$parent_question['image']=$data['list_media_main_paths'];
-				$parent_question['teacher_id']= $this->session->userdata('teacher_id');
-				$parent_question['course_id']= $data['question_subject_id'];
-				$parent_question_id= $this->Exam_model->save($parent_question,'qquestions');
-
-				foreach ($data['list_quest'] as $child_quest_index=>$child_question){
-					$child_question_arr=array();
-					$child_question_arr['course_type']=$data['course_types_class'];
-					$child_question_arr['group_id']=$data['question_group_id'];
-					$child_question_arr['parent_id']=$parent_question_id;
-					$child_question_arr['title']=$child_question[0];
-					//$child_question_arr['image']=$data['list_media_main_paths'];
-					$child_question_arr['teacher_id']= $this->session->userdata('teacher_id');
-					$child_question_id= $this->Exam_model->save($child_question_arr,'qquestions');
-					foreach ($data['list_answer'][$child_quest_index] as $ans_index=>$ans_value){
-						$answer_arr['question_id']=$child_question_id;
-						$answer_arr['answer']=$ans_value;
-						$answer_arr['image']=$data['list_media_paths'][$child_quest_index][$ans_index];
-						$answer_arr['is_correct']=($data['list_correct_answer'][$child_quest_index][$ans_index]==1)?1:0;
-						$this->Exam_model->save($answer_arr,'aanswers');
-					}
-
-
-
-				}
-				$exam_question=array();
-				$exam_question['exam_id']=$exam_id;
-				//$exam_question['group_id']=$data['question_group_id'];
-				$exam_question['question_id']=$parent_question_id;
-				$exam_question['ordering']=$data['list_arrange'];
-				$exam_question['grade']=$data['list_degree'];
-				$this->Exam_model->save($exam_question,'exams_questions');
-			}
-
-
-		}
-		echo json_encode(array('sucess'=>"done"));exit;
-		//	return("sucess");
 	}
 
 	public function update($id = NULL) {

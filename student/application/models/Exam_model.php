@@ -382,4 +382,27 @@ $query = $this->db->get();
 
 		//return $query->result();
 	}
+	function insertBatch_($data_to_insert, $table){
+		$this->db->insert_batch($table,$data_to_insert);
+	}
+	public function get_correct_answers($data_posted, $student_id)
+	{
+		$this->db->select('q.degree');
+		$this->db->from('students_questions_answers a');
+		$this->db->join('qquestions q', 'a.question_id = q.id');
+		$this->db->join('aanswers ma', 'a.answer = ma.id');
+		$this->db->where_in('a.question_id', array_keys($data_posted['selectedAnswers']));
+		$this->db->where('a.student_id', $student_id);
+		$this->db->where('ma.is_correct', 1);
+		$query = $this->db->get();
+
+		$total_score = 0;
+		if ($query->num_rows() > 0) {
+			foreach ($query->result() as $row) {
+				$total_score += $row->degree;
+			}
+		}
+
+		return $total_score;
+	}
 }

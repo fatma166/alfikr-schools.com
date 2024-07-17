@@ -13,21 +13,28 @@
 	<title>EDU STUDENT</title>
 	<link rel="icon" href="../../assets/images/logo.png" type="image/x-icon" />
 </head>
-<body>
+<body <?php if(!isset($right_menu)) {?> class="exam__layout" <?php }?>>
+<?php if(isset($right_menu)) {?>
 <div
 	class="dashboard__layout d-flex justify-content-start align-items-start flex-row"
 >
+
 	<?php $this->load->view('template/right_menu')?>
 
 	<div
 		class="wrraper_page d-flex justify-content-start align-items-start flex-column w-100"
 	>
+		<?php }?>
 		<?php // $this->load->view('template/header')?>
 		<?php if (isset($com_content))  echo $com_content; ?>
-
+		<?php if(isset($right_menu)) {?>
 	</div>
+	<?php }?>
 
 <?php $this->load->view('template/footer1')?>
+
+	<?php if(isset($right_menu)) {?>
 </div>
+<?php } ?>
 </body>
 </html>

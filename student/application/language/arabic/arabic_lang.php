@@ -1,5 +1,26 @@
 <?php
-
+$lang['sorry you failed in exam']='للاسف لم تنجح في الامتحان';
+$lang['congratulation you passed exam']='تم اجتياز الامتحان .. تهانينا';
+$lang['exam saved']='حفظ الامتحان';
+$lang['1']='الاول';
+$lang['2']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['1']='';
+$lang['Next'] = 'التالي';
+$lang['Previous'] = 'السابق';
+$lang['no data available'] = 'لا يوجد بيانات';
+$lang['Error'] = 'خطأ';
+$lang['An error occurred while'] = 'حدث خطأ في';
+$lang['save question multi'] = 'حفظ سؤال متعدد';
+$lang['OK'] = 'تم';
+$lang['you have earned'] = 'درجتك';
+$lang['return to exam page'] = 'الرجوع الي صفحة الاختبارات';
 /*$lang['prog_title'] = "اسم البرنامج";
 $lang['add_prog_hint'] = "قم باضافة صور للمستعرض الرئيسى";
 $lang['add_prog_discription'] = "وصف البرنامج";
