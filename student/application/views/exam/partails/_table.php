@@ -3,7 +3,7 @@
 	<tr class="Dark">
 		<th>تحديد</th>
 		<th>الرقم</th>
-		<th>عنوان الأختبار</th>
+		<th>عنوان <?php if($data_search['page_type']=="exam"){ echo "الامتحان"; }elseif ($data_search['page_type']=="exercise"){echo "الترين";}else{echo "الواجب";}?></th>
 		<th>المرحلة الدراسية</th>
 		<th>الصف الدراسي</th>
 		<th>المادة</th>
@@ -40,7 +40,7 @@
 						<td> <span class="status_exam"> انتهى </span> </td>
 
 						<?php }else{?>
-						<td> <a href="./exam-start.html" class="status_exam"> دخول إلى الأمتحان </a> </td>
+						<td> <a href="<?php echo base_url(); ?>/exam/exam_start/<?php echo $exam_arr['id']?>" class="status_exam"> دخول إلى <?php if($data_search['page_type']=="exam"){ echo "الامتحان"; }elseif ($data_search['page_type']=="exercise"){echo "التمرين";}else{echo "الواجب";}?> </a> </td>
 					<?php }?>
 
 			<td> <a href="<?php echo base_url(); ?>exam/get_detail/<?php echo $exam_arr['id'] ?><?php if (isset($data_search['type_id'])) echo '?type='.$data_search['type_id'];?>"> <img src="../../assets/images/eye.svg" alt="eye"> </a> </td>

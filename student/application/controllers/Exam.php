@@ -35,6 +35,7 @@ class Exam extends Admin_Controller {
 		$config['next_tag_open'] = '<li class="page-item">';
 		$config['next_tag_close'] = '</li>';
 		$config['prev_link'] = $this->lang->line('Previous');
+	//	$config['last_link'] = $this->lang->line('Last');
 		$config['prev_tag_open'] =  '<li class="page-item">';
 		$config['prev_tag_close'] = '</li>';
 		$config['attributes'] = array('class' => 'page-link');
@@ -44,11 +45,13 @@ class Exam extends Admin_Controller {
 		$student_course_arr=$this->Exam_model->get_select("students_courses",array('student_id'=>$student_id));
 
 		$course_arr=$this->Exam_model->get_select("courses",array('id'=>$student_course_arr[count($student_course_arr)-1]['course_id']));
-		//print_r($course_arr); exit;
-		$data_search ['stages'] = (isset($_REQUEST['stages'])) ? $_REQUEST['stages'] : '';
-		$data_search ['_class'] =isset($course_arr[0]['course_type'])?$course_arr[0]['course_type']:'';// (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
-		$data_search ['group_id'] = isset($course_arr[0]['id'])?$course_arr[0]['id']:'';//(isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
 
+		$data['subjects']=$this->getchild_subject($course_arr[0]['course_type']);
+
+		//$data_search ['stages'] = (isset($_REQUEST['stages'])) ? $_REQUEST['stages'] : '';
+	//	$data_search ['_class'] =isset($course_arr[0]['course_type'])?$course_arr[0]['course_type']:'';// (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
+		//$data_search ['group_id'] = isset($course_arr[0]['id'])?$course_arr[0]['id']:'';//(isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
+		$data_search ['main_subject_id'] =(isset($_REQUEST['main_subject_id'])) ? $_REQUEST['main_subject_id'] : 'all';
 		if(isset($_GET['type'])) {
 			$data_search ['type_id'] =$this->input->get('type');
 			$type_id= $this->Exam_model->get_select('exam_types', array('id' => $data_search ['type_id'] ));
@@ -60,6 +63,7 @@ class Exam extends Admin_Controller {
 			// print_r($type_id); exit;
 			$data_search ['type_id'] = (isset($type_id[0]['id'])) ? $type_id[0]['id'] : 'all';
 			$data_search['page_type']='exam';
+		//	print_r($data_search); exit;
 		}
 		//print_r($data_search); exit;
 		/*	$data['order'] = (isset($_REQUEST['order'])) ? $_REQUEST['order'] : 'q.id';
@@ -93,8 +97,15 @@ class Exam extends Admin_Controller {
 			//	$data_search['today']= date('Y-m-d');
 			//	$data_search['today']= date('Y-m-d');
 			//$data_search['page']=$page;
-			$q = http_build_query($data_search) . "\n";
-			$config['base_url'] = base_url() . 'exam/index/?' . $q;
+			if (!$this->input->is_ajax_request()) {
+				$q = http_build_query($data_search) . "\n";
+				$config['base_url'] = base_url() . 'exam/index/?type=2&'. $q;
+			}elseif (isset($_GET['type'])){
+				$q = http_build_query($data_search) . "\n";
+				$config['base_url'] = base_url() . 'exam/index/?type='+$type_id+'&'. $q;
+			}
+
+			//	print_r($config); exit;
 			$this->pagination->initialize($config);
 			$data['paging'] = $this->pagination->create_links();
 			$data['query'] = $result;
@@ -138,25 +149,25 @@ class Exam extends Admin_Controller {
 		$data['courses'] = $this->Course->get_courses();
 		$data['questions_groups'] = $this->Exam_model->get_select('questions_groups',array());
 		$data['data_search']=$data_search;
-	//	print_r($data['data_search']); exit;
+		//	print_r($data['data_search']); exit;
 
 		//print_r($result);
-	//	print_r($result_student); exit;
+		//	print_r($result_student); exit;
 		$data['exam_type']=(isset($type_id[0]['ar_name']))?$type_id[0]['ar_name']:'all' ;
 		$data['table_position']=isset($_GET['table_position'])?$_GET['table_position']:'';
 //print_r($data); exit;
 		if ($this->input->is_ajax_request()&&(isset($_GET['table_position']))&&$_GET['table_position']=="table_first") {
-		//if ($this->input->is_ajax_request()) {
+			//if ($this->input->is_ajax_request()) {
 
 			$this->load->view('exam/partails/_table', $data);
 		}elseif ($this->input->is_ajax_request()&&(isset($_GET['table_position']))&&$_GET['table_position']=="table_third") {
-			 $this->load->view('exam/partails/_table_today', $data);
+			$this->load->view('exam/partails/_table_today', $data);
 		}else{
-				$vars['com_title'] = $this->lang->line('exams');
-				$vars['right_menu']= $this->Users_per->fetch_right_menu();
-				$vars['com_content'] = $this->load->view('exam/index.php', $data, true);
-				$this->load->view('student_temp', $vars);
-			}
+			$vars['com_title'] = $this->lang->line('exams');
+			$vars['right_menu']= $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('exam/index.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}
 
 
 	}
@@ -178,32 +189,33 @@ class Exam extends Admin_Controller {
 		}
 	}
 	public function perview_exam($id){
-		$data_search ['stages'] = '';
-		$data_search ['_class'] ='';// (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
-		$data_search ['group_id'] = '';//(isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
-$data_search['type_id']=2;
-		$data_search['student_id']= $this->session->userdata('student_user_id');
-		$exams= $this->Exam_model->getAllData($data_search ,'result',200,0);
-		$result = array_filter($exams, function($item) use ($id) {
-			return $item['id'] == $id;
-		});
-	//	print_r($result); exit;
-		if(empty($result)){
-			$data=array();
-			$vars['com_title'] = $this->lang->line('error');
-			//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
-			$vars['com_content'] = $this->load->view('error.php', $data, true);
-			$this->load->view('student_temp', $vars);
-		}else {
-			//print_r($exams); exit;
-			$data = $this->get_exam_question($id);
-			$data['exam_details'] = $this->Exam_model->get_select("exams_", array('id' => $id));
-			//	print_r($data['exam_details']); exit;
-			$vars['com_title'] = $this->lang->line('exams');
-			//$vars['right_menu']= $this->Users_per->fetch_right_menu();
-			$vars['com_content'] = $this->load->view('exam/exam.php', $data, true);
-			$this->load->view('student_temp', $vars);
-		}
+		/*	$data_search ['stages'] = '';
+			$data_search ['_class'] ='';// (isset($_REQUEST['_class'])) ? $_REQUEST['_class'] : '';
+			$data_search ['group_id'] = '';//(isset($_REQUEST['group_id'])) ? $_REQUEST['group_id'] : '';
+	$data_search['type_id']=2;
+			$data_search['student_id']= $this->session->userdata('student_user_id');
+			$exams= $this->Exam_model->getAllData($data_search ,'result',200,0);
+			print_r($exams); exit;
+			$result = array_filter($exams, function($item) use ($id) {
+				return $item['id'] == $id;
+			});
+		//	print_r($result); exit;
+			if(empty($result)){
+				$data=array();
+				$vars['com_title'] = $this->lang->line('error');
+				//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+				$vars['com_content'] = $this->load->view('error.php', $data, true);
+				$this->load->view('student_temp', $vars);
+			}else {*/
+		//print_r($exams); exit;
+		$data = $this->get_exam_question($id);
+		$data['exam_details'] = $this->Exam_model->get_select("exams_", array('id' => $id));
+		//	print_r($data['exam_details']); exit;
+		$vars['com_title'] = $this->lang->line('exams');
+		//$vars['right_menu']= $this->Users_per->fetch_right_menu();
+		$vars['com_content'] = $this->load->view('exam/exam.php', $data, true);
+		$this->load->view('student_temp', $vars);
+		//	}
 	}
 
 	public function getquestion() {
@@ -295,7 +307,7 @@ $data_search['type_id']=2;
 		$start = ($page - 1) * $config['per_page'];
 		$limit = $config['per_page'];
 		$data_search=array();
-	//	$id=$this->input->post('id');
+		//	$id=$this->input->post('id');
 		$data['query'] = $this->Exam_model->get_exam_question($data_search ,$id, 'result', $limit , $start);
 		//print_r($data['query'] ); exit;
 		$data['exam_question']="details";
@@ -330,7 +342,7 @@ $data_search['type_id']=2;
 			$data['type_id'] = (isset($type_id[0]['id'])) ? $type_id[0]['id'] : 'all';
 			$data['page_type']='exam';
 		}
-        $data['type_id']=$_GET['type'];
+		$data['type_id']=$_GET['type'];
 		$vars['right_menu']= $this->Users_per->fetch_right_menu();
 		$vars['com_title'] = $this->lang->line('exams') . ' - ' . $this->lang->line('add');
 		$vars['com_content'] = $this->load->view('exam/add_exam', $data, true);
@@ -349,56 +361,59 @@ $data_search['type_id']=2;
 
 	public function save() {
 
-$data_posted=$this->input->post();
-if(!empty($data_posted['selectedAnswers'])){
-	$data_to_insert = array();
-	$questions_posted=array();
-	foreach($data_posted['selectedAnswers'] as $index=> $qusetion_answer){
-		$data_to_insert[] = array(
-			'question_id' => $index,
-			'student_id' => $this->session->userdata('student_user_id'),
-			'answer' => $qusetion_answer[0],
-			'exam_id' => $data_posted['exam_id']
-		);
+		$data_posted=$this->input->post();
+		if(!empty($data_posted['selectedAnswers'])){
+			$data_to_insert = array();
+			$questions_posted=array();
+			foreach($data_posted['selectedAnswers'] as $index=> $qusetion_answer){
+				$data_to_insert[] = array(
+					'question_id' => $index,
+					'student_id' => $this->session->userdata('student_user_id'),
+					'answer' => $qusetion_answer[0],
+					'exam_id' => $data_posted['exam_id']
+				);
 
-	}
-	if (!empty($data_to_insert)) {
-		$this->Exam_model->insertBatch_($data_to_insert, 'students_questions_answers');
-	}
-	$student_grade=$this->Exam_model->get_correct_answers($data_posted,$this->session->userdata('student_user_id'));
-	$exam_details=$this->Exam_model->get_select("exams_",array('id'=>$data_posted['exam_id']));
-	//print_r($exam_details); exit;
-	$grade_type=($student_grade>=$exam_details[0]['pass_degree'])?"success":"failed";
-	$exam_results=array('student_id'=>$this->session->userdata('student_user_id'),'exam_id'=>$data_posted['exam_id'],'mark'=>$student_grade,'date'=>date('Y-m-d'),'percentage'=>ceil($student_grade/$exam_details[0]['degree'])*100,'full_mark'=>$exam_details[0]['degree'],"pass_degree"=>$exam_details[0]['pass_degree']);
-	$this->Exam_model->save($exam_results,$table="exams_results");
-	/*$session_data = array(
-		'student_grade' => $student_grade,
-		'full_mark' => $exam_details[0]['degree'],
-		'grade_type' => $grade_type
-	);
+			}
+			if (!empty($data_to_insert)) {
+				$this->Exam_model->insertBatch_($data_to_insert, 'students_questions_answers');
+			}
+			$student_grade=$this->Exam_model->get_correct_answers($data_posted,$this->session->userdata('student_user_id'));
+			$exam_details=$this->Exam_model->get_select("exams_",array('id'=>$data_posted['exam_id']));
+			//print_r($exam_details); exit;
+			$grade_type=($student_grade>=$exam_details[0]['pass_degree'])?"success":"failed";
+			$exam_results=array('student_id'=>$this->session->userdata('student_user_id'),'exam_id'=>$data_posted['exam_id'],'mark'=>$student_grade,'date'=>date('Y-m-d'),'percentage'=>ceil($student_grade/$exam_details[0]['degree'])*100,'full_mark'=>$exam_details[0]['degree'],"pass_degree"=>$exam_details[0]['pass_degree']);
+			$this->Exam_model->save($exam_results,$table="exams_results");
+			/*$session_data = array(
+				'student_grade' => $student_grade,
+				'full_mark' => $exam_details[0]['degree'],
+				'grade_type' => $grade_type
+			);
 
-	$this->session->set_userdata($session_data);*/
+			$this->session->set_userdata($session_data);*/
+			// Set a session variable to indicate that the exam is completed
+			$this->session->set_userdata('exam_completed', true);
 
-}
+		}
 
 	}
 	public function result($id){
 
+
 		$data['result']=$this->Exam_model->get_select("exams_results",array('exam_id'=>$id,'student_id'=>$this->session->userdata('student_user_id')));
-  if(empty($data['result'])){
-	  $vars['com_title'] = $this->lang->line('error');
-	  //$vars['right_menu'] = $this->Users_per->fetch_right_menu();
-	  $vars['com_content'] = $this->load->view('error.php', $data, true);
-	  $this->load->view('student_temp', $vars);
-  }else {
-	  /*	$data['student_grade']=$this->session->userdata('student_grade');
-		  $data['full_mark']=$this->session->userdata('full_mark');
-		  $data['grade_type']=$this->session->userdata('grade_type');*/
-	  $vars['com_title'] = $this->lang->line('exam result');
-	  //$vars['right_menu']= $this->Users_per->fetch_right_menu();
-	  $vars['com_content'] = $this->load->view('exam/result.php', $data, true);
-	  $this->load->view('student_temp', $vars);
-  }
+		if(empty($data['result'])){
+			$vars['com_title'] = $this->lang->line('error');
+			//$vars['right_menu'] = $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('error.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}else {
+			/*	$data['student_grade']=$this->session->userdata('student_grade');
+				$data['full_mark']=$this->session->userdata('full_mark');
+				$data['grade_type']=$this->session->userdata('grade_type');*/
+			$vars['com_title'] = $this->lang->line('exam result');
+			//$vars['right_menu']= $this->Users_per->fetch_right_menu();
+			$vars['com_content'] = $this->load->view('exam/result.php', $data, true);
+			$this->load->view('student_temp', $vars);
+		}
 
 	}
 
@@ -566,7 +581,7 @@ if(!empty($data_posted['selectedAnswers'])){
 		$data['marks']=$this->Exam_model->getmarks($id,"single");
 		$data['student_results']=$this->Exam_model->get_select('exams_results',array('exam_id'=>$id,'student_id'=> $this->session->userdata('student_user_id'))) ;
 		//print_r($data['marks']); exit;
-	
+
 		//$data['student_attends']=$this->Exam_model->getattend($id);
 		if(isset($_GET['type'])) {
 			$get_type_id=$this->input->get('type');
@@ -649,6 +664,20 @@ if(!empty($data_posted['selectedAnswers'])){
 			);
 		}
 		echo (json_encode($response));
+	}
+
+	public function getchild_subject($class_id){
+
+		$data=$this->Questionbank_model->get_select('main_subjects',array('course_type'=>$class_id));
+		$response = array();
+		foreach ($data as $option) {
+			$response[] = array(
+				'id' => $option['id'],
+				'name' => $option['name']
+			);
+		}
+		return($response);
+
 	}
 
 

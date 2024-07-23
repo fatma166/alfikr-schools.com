@@ -196,6 +196,7 @@ class QuestionBank extends Admin_Controller {
 				//	print_r($question_arr); exit;
 
 			}else{
+
 				$parent_question=array();
 				$parent_question['course_type']=$data['course_types_class'];
 				$parent_question['group_id']=$data['question_group_id'];
@@ -208,7 +209,7 @@ class QuestionBank extends Admin_Controller {
 
 				foreach ($data['list_quest'] as $child_quest_index=>$child_question){
 					$child_question_arr=array();
-					$child_question_arr['course_type']=$data['course_types_stages'];
+					$child_question_arr['course_type']=$data['course_types_class'];
 					$child_question_arr['group_id']=$data['question_group_id'];
 					$child_question_arr['parent_id']=$parent_question_id;
 					$child_question_arr['title']=$child_question[0];

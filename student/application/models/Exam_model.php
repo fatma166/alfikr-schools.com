@@ -44,7 +44,7 @@ class Exam_model extends CI_Model {
 
 		//print_r($this->db->last_query());exit;
 		//$result->row();
-	//	print_r($result->get()->row_array()); exit;
+		//	print_r($result->get()->row_array()); exit;
 		if( $result->num_rows() > 0 )
 		{
 			return $result->row_array();
@@ -54,7 +54,7 @@ class Exam_model extends CI_Model {
 		//$result->fetch_assoc();
 		//return $result;
 	}
-public function getattend($id){
+	public function getattend($id){
 
 		$result=$this->db->select('e.id, e.title,e.degree,e.active,e.minutes,e.details,e.type,e.start_date,e.end_date,s.first_name,s.last_name,s.mobile,er.student_id,er.exam_id,er.mark,er.date,er.percentage')
 			->from('exams_results er')
@@ -69,16 +69,16 @@ public function getattend($id){
 	}
 	public function getnotattend($id){
 
-	$result = $this->db->select('s.first_name, s.last_name, s.mobile, er.student_id, er.exam_id, er.mark, er.date, er.percentage')
-                   ->from('students s')
-                   ->join('exams_results er', 's.id = er.student_id', 'left outer')
-                   
-                  // ->where('er.exam_id', $id) and er.exam_id != ' . $id
-                   ->where('er.student_id IS NULL')//and er.exam_id != ' . $id  
-                   ->get()
-                   ->result_array();
+		$result = $this->db->select('s.first_name, s.last_name, s.mobile, er.student_id, er.exam_id, er.mark, er.date, er.percentage')
+			->from('students s')
+			->join('exams_results er', 's.id = er.student_id', 'left outer')
+
+			// ->where('er.exam_id', $id) and er.exam_id != ' . $id
+			->where('er.student_id IS NULL')//and er.exam_id != ' . $id
+			->get()
+			->result_array();
 //print_r($result); exit;   
-        // print_r($this->db->last_query()); exit;
+		// print_r($this->db->last_query()); exit;
 		return $result;
 	}
 	public function getmarks($id,$type="single"){
@@ -92,7 +92,7 @@ public function getattend($id){
 			->where('er.exam_id',$id)
 			->get()->row_array();
 //print_r($marks); exit;
-return($marks);
+		return($marks);
 	}
 	public function update($id, $data) {
 		$this->db->where('id', $id);
@@ -116,15 +116,20 @@ return($marks);
 		if ($search) {
 			$this->db->like('name', $search);
 		}*/
-		if($data_search['stages']&&($data_search['stages']!="all")){
+		if(isset($data_search['stages'])&&($data_search['stages']!="all")){
 			//$this->db->where("course_type", $data_search['stages']);
 			$this->db->where("course_id", $data_search['_class']);
 		}
 
-		if($data_search['group_id']&&($data_search['group_id']!="all")){
+		if(isset($data_search['group_id'])&&($data_search['group_id']!="all")){
 			$this->db->where("group_id", $data_search['group_id']);
 		}
-				if($data_search['type_id']&&($data_search['type_id']!="all")){
+
+		if($data_search['main_subject_id']&&($data_search['main_subject_id']!="all")){
+			$this->db->where("main_subject_id", $data_search['main_subject_id']);
+		}
+		if($data_search['type_id']&&($data_search['type_id']!="all")){
+
 			$this->db->where("type_id", $data_search['type_id']);
 		}
 
@@ -143,7 +148,7 @@ return($marks);
 		$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left'); //course_type
 		$this->db->join('courses_types c', 'ct.parent_id = c.id', 'left');
 		$this->db->join('main_subjects ms', 'ms.id = e.main_subject_id', 'left')
-		->join('exams_results er','e.id =er.exam_id', 'left outer');
+			->join('exams_results er','e.id =er.exam_id', 'left outer');
 		if(isset($data_search['student_id'])){
 			$this->db->where('er.student_id',$data_search['student_id']);
 		}
@@ -153,7 +158,7 @@ return($marks);
 			//$start_of_day = $today . ' 00:00:00';
 			//$end_of_day = $today . ' 23:59:59';
 			$this->db->where('er.date', $today);
-				//->where('er.date <=', $end_of_day);
+			//->where('er.date <=', $end_of_day);
 		}
 		$this->db->where('e.deleted_at IS NULL');
 		$this->db->group_by('e.id');
@@ -177,10 +182,10 @@ return($marks);
 		//return $questions;
 
 		if ($t=='result') {
-		//	$data = array_slice($data, $start, $limit);
+			//	$data = array_slice($data, $start, $limit);
 			return $data->result_array();
 		} else {
-				return $data->num_rows();
+			return $data->num_rows();
 			//return(count($data->result_array()));
 		}
 	}
@@ -188,18 +193,18 @@ return($marks);
 
 
 	public function get_exam_question($data_search,$id,$t='result',$limit=10,$start=0){
-	$this->db->select('q.id as qid, q.title as qtitle, q.parent_id, q.question_type, e.id, e.title, e.active, e.minutes, e.details, e.type, e.start_date, e.end_date, ct.ar_name, ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name,
+		$this->db->select('q.id as qid, q.title as qtitle, q.parent_id, q.question_type, e.id, e.title, e.active, e.minutes, e.details, e.type, e.start_date, e.end_date, ct.ar_name, ct.parent_id as course_type_parent_id, c.ar_name as parent_course_type_ar_name,
                    (SELECT GROUP_CONCAT(a.id SEPARATOR "|") FROM aanswers a WHERE a.question_id = q.id) AS answer_ids,
                    (SELECT GROUP_CONCAT(a.answer SEPARATOR "|") FROM aanswers a WHERE a.question_id = q.id) AS answers,
                    (SELECT GROUP_CONCAT(a.is_correct SEPARATOR "|") FROM aanswers a WHERE a.question_id = q.id) AS is_correct');
-$this->db->from('qquestions q');
-$this->db->join('exams_questions eq', 'eq.question_id = q.id OR eq.question_id = q.parent_id', 'left');
-$this->db->join('exams_ e', 'e.id = eq.exam_id', 'left');
-$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left');
-$this->db->join('courses_types c', 'ct.parent_id = c.id', 'left');
-$this->db->where('eq.exam_id', $id);
-$this->db->order_by('eq.ordering', 'asc');
-$query = $this->db->get();
+		$this->db->from('qquestions q');
+		$this->db->join('exams_questions eq', 'eq.question_id = q.id OR eq.question_id = q.parent_id', 'left');
+		$this->db->join('exams_ e', 'e.id = eq.exam_id', 'left');
+		$this->db->join('courses_types ct', 'ct.id = e.course_id', 'left');
+		$this->db->join('courses_types c', 'ct.parent_id = c.id', 'left');
+		$this->db->where('eq.exam_id', $id);
+		$this->db->order_by('eq.ordering', 'asc');
+		$query = $this->db->get();
 		$questions = array();
 		$data=array();
 		foreach ($query->result_array() as $row) {
@@ -285,7 +290,7 @@ $query = $this->db->get();
 			'deleted_at' => date('Y-m-d H:i:s')
 		);
 		$result=$this->db->where('id',$id)
-			      ->update($this->tableName,$data);
+			->update($this->tableName,$data);
 
 		return $result;
 	}

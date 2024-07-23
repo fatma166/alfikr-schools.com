@@ -20,7 +20,7 @@ class Admin_Controller extends CI_Controller
 		parent::__construct();
 		//date_default_timezone_set('Africa/Cairo');
 		log_message('debug', 'Application Loaded');
-		//$this->lang->load('arabic');
+		$this->lang->load('arabic');
 		$this->load->helper(array('form', 'url'));
 		$this->load->library('form_validation');
 		$this->load->model('Users_per');

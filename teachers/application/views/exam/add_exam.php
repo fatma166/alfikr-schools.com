@@ -208,11 +208,14 @@
 							<label for=""> مدة الأختبار </label>
 							<input
 								name="time"
-								type="number"
-								class="form-control"
+								type="text"
+								class="form-control exam_duration"
 								placeholder="مدة الأختبار "
 								aria-label="date"
 							/>
+							<div class="input-group-append">
+								<span class="input-group-text">HH:mm:ss</span>
+							</div>
 							<div class="invalid-feedback d-block" id="nex_time"></div>
 						</div>
 					</div>
@@ -760,7 +763,7 @@
             formData.append('arrangeValues', JSON.stringify(arrangeValues));
             formData.append('checkDegree', JSON.stringify(checkDegree));
             formData.append('page_type_id', <?php  echo $type_id;?>);
-           // console.log(formData);
+            // console.log(formData);
             $.ajax({
                 type:"post",
                 url: "<?Php echo base_url(); ?>exam/save",
@@ -769,7 +772,7 @@
                 contentType: false,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function(data1) {
-                   // connsole.log(data1);
+                    // connsole.log(data1);
                     // alert("suceess");
                     Swal.fire({
                         title: "<?php echo $this->lang->line('exam saved')?>",
@@ -1007,5 +1010,25 @@
     });
 
 
+    // Add an event listener to the input field
+    document.getElementsByClassName('exam_duration').addEventListener('input', function(event) {
+        // Get the input value
+        let input = event.target.value;
 
+        // Remove any non-numeric or non-colon characters
+        input = input.replace(/[^0-9:]/g, '');
+
+        // Format the input to HH:mm:ss
+        let parts = input.split(':');
+        let hours = parts[0] ? parseInt(parts[0], 10) : 0;
+        let minutes = parts[1] ? parseInt(parts[1], 10) : 0;
+        let seconds = parts[2] ? parseInt(parts[2], 10) : 0;
+
+        hours = String(hours).padStart(2, '0');
+        minutes = String(minutes).padStart(2, '0');
+        seconds = String(seconds).padStart(2, '0');
+
+        event.target.value = `${hours}:${minutes}:${seconds}`;
+        // event.target.value = `${minutes}:${seconds}`;
+    });
 </script>

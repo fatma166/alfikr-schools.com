@@ -13,7 +13,7 @@
 				aria-controls="pills-todayExams"
 				aria-selected="true"
 			>
-				أختبارات اليوم
+				<?php if($data_search['page_type']=="exam"){ echo "الامتحانات"; }elseif ($data_search['page_type']=="exercise"){echo "التمارين";}else{echo "الواجبات";}?> اليوم
 			</button>
 		</li>
 		<li class="nav-item" role="presentation">
@@ -27,7 +27,7 @@
 				aria-controls="pills-allExams"
 				aria-selected="true"
 			>
-				كل الأختبارات
+				كل <?php if($data_search['page_type']=="exam"){ echo "الامتحانات"; }elseif ($data_search['page_type']=="exercise"){echo "التمارين";}else{echo "الواجبات";}?>
 			</button>
 		</li>
 	</ul>
